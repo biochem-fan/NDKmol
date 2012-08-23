@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+<item android:title="@string/TouchMode"><menu>
+   <group android:checkableBehavior="single" android:id="@+id/touchMode">
+	<item android:id="@+id/zoom" android:icon="@android:drawable/ic_menu_zoom" android:title="@string/Zoom"/>
+	<item android:id="@+id/rotate" android:icon="@android:drawable/ic_menu_rotate" android:title="@string/Rotate"/>
+	<item  android:id="@+id/move" android:title="@string/Move" android:icon="@android:drawable/ic_menu_mapmode"/>
+	<item  android:id="@+id/slab" android:title="@string/Slab"/>
+	</group>
+	<item  android:id="@+id/resetView" android:title="@string/resetView"/>
+</menu></item>
+    
+<item android:title="@string/Polymer">
+  <menu><group android:checkableBehavior="single" android:id="@+id/ProteinMode">
+    <item android:id="@+id/CA_trace" android:title="@string/AsMainchainTrace"/>
+    <item android:id="@+id/Ribbon" android:title="@string/AsRibbon"/>
+    <item android:id="@+id/ThickRibbon" android:title="@string/AsThickRibbon"/>
+    <item android:id="@+id/Strand" android:title="@string/AsStrand"/>
+    <item android:id="@+id/Tube" android:title="@string/AsBFactorTube"/>
+    <item android:id="@+id/Bonds" android:title="@string/AsBonds"/>
+    <item android:id="@+id/MainchainNone" android:title="@string/None"/>
+  </group>
+  <group android:checkableBehavior="all" >
+	 <item android:id="@+id/doNotSmoothen" android:title="@string/doNotSmoothen"/>
+  </group>
+  <group android:checkableBehavior="all" >
+	 <item android:id="@+id/Sidechain" android:title="@string/ShowSidechains"/>
+  </group>
+  <group android:checkableBehavior="single"  android:id="@+id/NucleicAcidMode">
+	<item android:id="@+id/basePolygon" android:title="@string/BaseAsPolygon"/>
+    <item android:id="@+id/baseLine" android:title="@string/BaseAsLine"/>
+    <item android:id="@+id/baseNone" android:title="@string/None"/>
+  </group>
+  </menu>
+</item>
+
+<item android:title="@string/Ligands">
+  <menu><group android:checkableBehavior="single" >
+	 <item android:id="@+id/Sphere" android:title="@string/AsSphere"/>
+    <item android:id="@+id/Stick" android:title="@string/AsStick"/>
+    <item android:id="@+id/Line" android:title="@string/AsLine"/>
+    <item android:id="@+id/HetatmNone" android:title="@string/None"/>
+  </group>
+  <group android:checkableBehavior="all" >
+    <item android:id="@+id/Solvent" android:title="@string/ShowSolvents"/>
+  </group>  
+ </menu>
+</item>
+
+<item android:title="@string/Color">
+  <menu><group android:checkableBehavior="single" >
+	 <item android:id="@+id/Chain" android:title="@string/ByChain"/>
+    <item android:id="@+id/Structure" android:title="@string/ByStructure"/>
+    <item android:id="@+id/Chainbow" android:title="@string/AsRainbow"/>
+    <item android:id="@+id/Polarity" android:title="@string/PolarNonpolar"/>
+    <item android:id="@+id/BFactor" android:title="@string/ByBFactor"/>
+  </group></menu>
+</item>
+    
+<item android:title="@string/Crystal">
+  <menu>
+  <group android:checkableBehavior="all" >
+	 <item android:id="@+id/Cell" android:title="@string/ShowUnitCell"/>
+  </group>
+  <group android:checkableBehavior="all" >
+	 <item android:id="@+id/symopHetatms" android:title="@string/SymopHetatms"/>
+  </group>
+  <group android:checkableBehavior="single" >
+	 <item android:id="@+id/Biomt" android:title="@string/ShowBiologicalUnit"/>
+    <item android:id="@+id/Packing" android:title="@string/ShowPacking"/>
+    <item android:id="@+id/Monomer" android:title="@string/ShowMonomer"/>
+  </group>
+  <item android:id="@+id/showHeader" android:title="@string/ShowHeader"/>    
+  </menu>
+</item>
+
+<item
+ android:id="@+id/open"
+ android:title="@string/Open"/>
+<item
+ android:id="@+id/downloadPDB"
+ android:title="@string/DownloadPDB"/>
+<item
+ android:id="@+id/preferences"
+ android:title="@string/Preferences"/>
+<item
+ android:id="@+id/about"
+ android:title="@string/About"/>
+
+</menu>

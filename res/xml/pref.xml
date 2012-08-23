@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/preferencesTitle">
+	    <CheckBoxPreference android:summary="@string/enableFogSummary" 
+		    android:title="@string/enableFogTitle"
+		    android:key="@string/enableFog" 
+		    android:defaultValue="false"/>
+		<CheckBoxPreference android:summary="@string/useProxySummary" 
+		    android:title="@string/useProxyTitle"
+		    android:key="@string/useProxy" 
+		    android:defaultValue="false"/>
+		<EditTextPreference
+			android:key="@string/proxyHost"
+			android:title="@string/proxyHostTitle"
+			android:summary="@string/proxyHostSummary" android:dependency="@string/useProxy"/>
+		<EditTextPreference
+			android:key="@string/proxyPort"
+			android:title="@string/proxyPortTitle"
+			android:summary="@string/proxyPortSummary" android:dependency="@string/useProxy" android:defaultValue="8080"/>
+	</PreferenceCategory>
+</PreferenceScreen>

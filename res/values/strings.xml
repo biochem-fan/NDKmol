@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NDKmol</string>
+    <string name="preferencesTitle">Preferences</string>
+    <string name="proxyHost">httpProxyHost</string>
+    <string name="proxyHostTitle">HTTP Proxy Host</string>
+    <string name="proxyHostSummary"></string>
+    <string name="proxyPortTitle">HTTP Proxy Port</string>
+    <string name="proxyPort">httpProxyPort</string>
+    <string name="proxyPortSummary"></string>
+    <string name="useProxy">useHTTPProxy</string>
+    <string name="useProxySummary">select to use HTTP proxy</string>
+    <string name="useProxyTitle">Use HTTP Proxy</string>
+    <string name="about">
+NDKmol - Molecular Viewer for Android\n
+Please visit http://webglmol.sfjp.jp/ for the details and source codes. You can
+also get WebGL version there.\n
+\n
+\n
+\n
+*** LICENSE NOTICE ***
+\n
+NDKmol itself is licensed under GNU Lesser General Public License as follows.\n
+\n
+However, PDB files included as examples are under DIFFERENT conditions.\n
+Please consult http://www.rcsb.org/pdb/static.do?p=general_information/about_pdb/pdb_advisory.html\n
+\n
+-------------\n
+\n
+The structure used as an example is adapted from PDB, ID 2POR:\n
+ "Structure of porin refined at 1.8 A resolution"\n
+   Weiss, M.S.,  Schulz, G.E., J.Mol.Biol. 227: 493-509 (1992)
+\n
+-------------\n
+\n
+NDKmol - Molecular Viewer for Android\n
+\n
+     (C) Copyright 2011, biochem_fan\n
+\n
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.\n
+\n
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/\n
+\n
+    </string>
+    <string name="tooBigPDB">This file is too big. Please consider using NDKmol which is available at Android Market or my project website.</string>
+    <string name="tooBigSDF">This file is too big to open.</string>
+    <string name="wrongPDBID">PDB id is wrong.</string>
+    <string name="unknownFIleType">Unknown file type. Only .pdb / .sdf / .mol files are supported.</string>
+    <string name="Zoom">Zoom</string>
+    <string name="Rotate">Rotate</string>
+    <string name="Move">Move</string>
+    <string name="AsMainchainTrace">As mainchain trace</string>
+    <string name="AsRibbon">As thin ribbon(faster)</string>
+    <string name="AsStrand">As strand</string>
+    <string name="ShowSidechains">Show sidechains</string>
+    <string name="BaseAsPolygon">Nucleic acid ladder</string>
+    <string name="BaseAsLine">Nucleic acid line</string>
+    <string name="AsSphere">As sphere</string>
+    <string name="AsStick">As stick</string>
+    <string name="AsLine">As line</string>
+    <string name="ShowSolvents">Show solvents</string>
+    <string name="ByChain">By chain</string>
+    <string name="ByStructure">By structure</string>
+    <string name="AsRainbow">As rainbow</string>
+    <string name="PolarNonpolar">Polar/Nonpolar</string>
+    <string name="ByBFactor">By B factor</string>
+    <string name="ShowPacking">show packing</string>
+    <string name="ShowUnitCell">Show unit cell</string>
+    <string name="ShowMonomer">show monomer</string>
+    <string name="ShowBiologicalUnit">Show biological unit</string>
+    <string name="Polymer">Polymer</string>
+    <string name="AsBFactorTube">As B factor tube</string>
+    <string name="Ligands">Ligands</string>
+    <string name="Color">Color</string>
+    <string name="Crystal">Crytals</string>
+    <string name="Open">Open</string>
+    <string name="DownloadPDB">Search and Download</string>
+    <string name="Preferences">Preferences</string>
+    <string name="About">About</string>
+    <string name="goToWebSite">Visit Website</string>
+    <string name="searchButton">Search</string>
+    <string name="PDBID">ID:</string>
+    <string name="structureTitle">Title:</string>
+    <string name="blank"></string>
+    <string name="resolution">Resolution:</string>
+    <string name="authors">Authors:</string>
+    <string name="releaseDate">Released on:</string>
+    <string name="tooManyHits">Found too many entries. Displaying only part of them.</string>
+    <string name="downloading">Downloading...</string>
+    <string name="searching">Searching...</string>
+    <string name="pleaseWait">Please wait</string>
+    <string name="TouchMode">Touch Mode</string>
+    <string name="Slab">Slab</string>
+    <string name="resetView">Reset View</string>
+    <string name="ShowHeader">View header</string>
+    <string name="downloadError">Error occured while downloading the structure.</string>
+    <string name="no3DSDF">PubChem does not provide a three dimensional structure of this compound(Only two dimensional structure is available). Download was canceled.</string>
+    <string name="enableFog">enableFog</string>
+    <string name="enableFogTitle">Enable Fog</string>
+    <string name="enableFogSummary">On some devices, this causes a coloring problem. If molecule turns gray, please uncheck this.</string>
+    <string name="AsBonds">As bonds (everything)</string>
+    <string name="None">None</string>
+    <string name="AsThickRibbon">As thick ribbon</string>
+    <string name="SymopHetatms">Apply to HETATMs</string>
+    <string name="doNotSmoothen">No smooth sheets</string>
+</resources>

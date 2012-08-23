@@ -1,0 +1,12 @@
+* How to compile JNI library
+
+1. Write Java code. Declare method with "native"
+2. Compile Java in Eclipse.
+3. Under bin/classes, make header files using javah. For example,
+ javah jp.sfjp.webglmol.NDKmol.NdkView
+4. Move it to jni/
+5. Include the header and implement the method
+6. Add cpp files to "Android.mk"
+7. Run
+ ndk-build
+8. Build in Eclipse to make apk file

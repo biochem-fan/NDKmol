@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NDKmol</string>
+    <string name="preferencesTitle">設定</string>
+    <string name="proxyHost">httpProxyHost</string>
+    <string name="proxyHostTitle">HTTP プロキシ ホスト名</string>
+    <string name="proxyHostSummary"></string>
+    <string name="proxyPortTitle">HTTP プロキシ ポート番号</string>
+    <string name="proxyPort">httpProxyPort</string>
+    <string name="proxyPortSummary"></string>
+    <string name="useProxy">useHTTPProxy</string>
+    <string name="useProxySummary">HTTP プロキシを使用する</string>
+    <string name="useProxyTitle">HTTP Proxy を使用</string>
+    <string name="about">NDKmol - Molecular Viewer for Android\n
+詳細は、 http://webglmol.sfjp.jp/ をご覧ください。ソースコードも配布しています。また、より高機能な
+WebGL 版もあります。\n
+\n
+\n
+\n
+*** LICENSE NOTICE ***
+\n
+NDKmol itself is licensed under GNU Lesser General Public License as follows.\n
+\n
+However, PDB files included as examples are under DIFFERENT conditions.\n
+Please consult http://www.rcsb.org/pdb/static.do?p=general_information/about_pdb/pdb_advisory.html\n
+\n
+-------------\n
+\n
+The structure used as an example is adapted from PDB, ID 2POR:\n
+ "Structure of porin refined at 1.8 A resolution"\n
+   Weiss, M.S.,  Schulz, G.E., J.Mol.Biol. 227: 493-509 (1992)\n
+\n
+-------------\n
+NDKmol - Molecular Viewer for Android\n
+\n
+     (C) Copyright 2011, biochem_fan\n
+\n
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.\n
+\n
+You should have received a copy of the GNU Lesser General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/\n
+\n
+    </string>
+    <string name="tooBigPDB">ファイルが大きすぎて開けません。NDKmol (マーケットまたはWebサイトから入手可能)を使用してください。</string>
+    <string name="tooBigSDF">ファイルが大きすぎて開けません。</string>
+    <string name="wrongPDBID">PDB ID が間違っています。</string>
+    <string name="unknownFileType">非対応のファイル形式です。 .pdb / .sdf / .mol ファイルを選択してください。</string>
+    <string name="Zoom">拡大縮小</string>
+    <string name="Rotate">回転</string>
+    <string name="Move">平行移動</string>
+    <string name="AsMainchainTrace">主鎖トレース</string>
+    <string name="AsRibbon">帯(リボン)</string>
+    <string name="AsStrand">寄り紐</string>
+    <string name="ShowSidechains">側鎖を表示</string>
+    <string name="BaseAsPolygon">核酸塩基をラダーで</string>
+    <string name="BaseAsLine">核酸塩基を線で</string>
+    <string name="AsSphere">球で表示</string>
+    <string name="AsStick">棒で表示</string>
+    <string name="AsLine">線で表示</string>
+    <string name="ShowSolvents">溶媒分子も表示</string>
+    <string name="ByChain">鎖ごと</string>
+    <string name="ByStructure">二次構造で</string>
+    <string name="AsRainbow">グラデーション</string>
+    <string name="PolarNonpolar">極性/非極性</string>
+    <string name="ByBFactor">温度因子</string>
+    <string name="ShowPacking">パッキングを表示</string>
+    <string name="ShowUnitCell">単位胞を表示</string>
+    <string name="ShowMonomer">単量体として表示</string>
+    <string name="ShowBiologicalUnit">生物学的多量体を表示</string>
+    <string name="Polymer">蛋白質・核酸</string>
+    <string name="AsBFactorTube">温度因子チューブ</string>
+    <string name="Ligands">低分子</string>
+    <string name="Color">色</string>
+    <string name="Crystal">結晶</string>
+    <string name="Open">開く</string>
+    <string name="DownloadPDB">検索してダウンロード</string>
+    <string name="Preferences">設定</string>
+    <string name="About">このソフトについて</string>
+    <string name="goToWebSite">Website を開く</string>
+    <string name="searchButton">検索</string>
+    <string name="PDBID">ID:</string>
+    <string name="structureTitle">名称:</string>
+    <string name="blank"></string>
+    <string name="resolution">分解能:</string>
+    <string name="authors">著者:</string>
+    <string name="releaseDate">公開日:</string>
+    <string name="tooManyHits">検索結果が多すぎます。一部だけを表示しています</string>
+    <string name="downloading">ダウンロード中...</string>
+    <string name="searching">検索中...</string>
+    <string name="pleaseWait">お待ちください</string>
+    <string name="TouchMode">操作</string>
+    <string name="Slab">スラブ</string>
+    <string name="resetView">視点をリセット</string>
+    <string name="ShowHeader">ヘッダを表示</string>
+    <string name="downloadError">構造データのダウンロード中にエラーが発生しました</string>
+    <string name="no3DSDF">PubChem にはこの物質の立体構造データがありません(平面構造データのみのようです)。ダウンロードを中止します。</string>
+    <string name="enableFog">enableFog</string>
+    <string name="enableFogTitle">フォグを有効にする</string>
+    <string name="enableFogSummary">機種によっては着色に問題が発生することがあります。分子が灰色になってしまう場合はチェックを外してください。</string>
+    <string name="AsBonds">結合をすべて表示</string>
+    <string name="None">なし</string>
+    <string name="AsThickRibbon">厚いリボン</string>
+    <string name="SymopHetatms">低分子も対称操作</string>
+    <string name="doNotSmoothen">シートを平滑化しない</string>
+</resources>
