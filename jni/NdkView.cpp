@@ -43,7 +43,7 @@
 #include "Protein.hpp"
 #include "View.hpp"
 
-#define DIV 5
+#define DIV 1
 
 Atom *atoms = NULL;
 Protein *protein = NULL;
@@ -756,7 +756,7 @@ void drawBondsAsLineSub(std::vector<Vector3> &points, std::vector<Color> &colors
 			dot = Vector3::dot(tmp, axis);
 			dx = tmp.x - axis.x * dot; dy = tmp.y - axis.y * dot; dz = tmp.z - axis.z * dot;
 		}
-		if (found == NULL || std::abs(dot - 1) < 0.001) {
+		if (found == NULL || std::abs(dot - 1) < 0.001 || std::abs(dot + 1) < 0.001) {
 			if (axis.x < 0.01 && axis.y < 0.01) {
 				dx = 0; dy = - axis.z; dz = axis.y;
 			} else {
