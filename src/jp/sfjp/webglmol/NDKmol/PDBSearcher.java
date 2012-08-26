@@ -41,7 +41,6 @@ import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.DialogInterface.OnShowListener;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -197,7 +196,7 @@ public class PDBSearcher extends Activity {
 					long id) {
 				Map<String, String> item = (Map<String, String>) listView.getItemAtPosition(position);
 				final String PDBid = item.get("structureId");
-				// TODO: 無駄が多い。removeView 使えば再利用できるようになる?
+				// TODO: Can we recycle this by removeView?
 				LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 				detailsView = inflater.inflate(R.layout.detailview, null);
 
@@ -211,11 +210,12 @@ public class PDBSearcher extends Activity {
 				}
 				((TextView)detailsView.findViewById(R.id.textAuthors)).setText(item.get("structureAuthor"));
 				((TextView)detailsView.findViewById(R.id.textReleaseDate)).setText(item.get("releaseDate"));
+				
 				Builder b = new AlertDialog.Builder(self)
 				.setIcon(android.R.drawable.ic_dialog_info)
 				.setTitle("Structure details")
 				.setView(detailsView)
-				.setPositiveButton("Download", new DialogInterface.OnClickListener() {
+				.setPositiveButton(getString(R.string.download), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						Intent i = new Intent();
 						i.setData(Uri.parse("http://www.pdb.org/pdb/files/" + PDBid.toUpperCase() + ".pdb"));
@@ -224,11 +224,10 @@ public class PDBSearcher extends Activity {
 						finish();
 					}
 				})
-				.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+				.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 					}
 				});
-
 				b.show();
 			}
 		});

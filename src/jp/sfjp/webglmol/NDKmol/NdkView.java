@@ -21,10 +21,8 @@ package jp.sfjp.webglmol.NDKmol;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
-import android.util.Log;
 
 public class NdkView implements GLSurfaceView.Renderer  {
 	public float objX, objY, objZ;
@@ -34,14 +32,14 @@ public class NdkView implements GLSurfaceView.Renderer  {
 	public int width, height;
 
 	// See View.hpp for these constants
-	public int proteinMode = 1;
+	public int proteinMode = 0;
 	public int hetatmMode = 2;
 	public int nucleicAcidMode = 0;
 	public boolean showSidechain = false;
 	public boolean showUnitcell = false;
 	public boolean showSolvents = false;
 	public boolean doNotSmoothen = false;
-	public boolean symopHetatms = false;
+	public boolean symopHetatms = true;
 	public int symmetryMode = 0;
 	public int colorMode = 0;
 	public boolean fogEnabled = false;
@@ -52,25 +50,25 @@ public class NdkView implements GLSurfaceView.Renderer  {
 	private static native void nativeLoadProtein(String path);
 	private static native void nativeLoadSDF(String path);
 	private static native void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode, boolean showSidechain, 
-			boolean showUnitcell, int nucleicAcidMode, boolean showSolvents, boolean resetView,
+			boolean showUnitcell, int nucleicAcidMode, boolean showSolvents, 
 			boolean doNotSmoothen, boolean symopHetatms);
-	public static native float[] nativeAdjustZoom();
+	public static native float[] nativeAdjustZoom(int symmetryMode);
 	
 	public NdkView() {
 		resetCamera();
 	} 
 	
 	public void resetCamera() {
-		float [] parms = nativeAdjustZoom();
+		float [] parms = nativeAdjustZoom(symmetryMode);
 		objX = parms[0]; objY = parms[1]; objZ = parms[2];
 		cameraZ = parms[3]; slabNear = parms[4]; slabFar = parms[5];
 		maxD = parms[6];
 		rotationQ = new Quaternion(1, 0, 0, 0);
 	}
 	
-	public void prepareScene(boolean resetView) {
+	public void prepareScene() {
 		buildScene(proteinMode, hetatmMode, symmetryMode, colorMode, showSidechain, showUnitcell, 
-				nucleicAcidMode, showSolvents, resetView, doNotSmoothen, symopHetatms);
+				nucleicAcidMode, showSolvents, doNotSmoothen, symopHetatms);
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -125,13 +123,13 @@ public class NdkView implements GLSurfaceView.Renderer  {
 	
 	public void loadPDB(String path) {
 		nativeLoadProtein(path);	
-		prepareScene(true);
+		prepareScene();
 		resetCamera();
 	}
 	
 	public void loadSDF(String path) {
 		nativeLoadSDF(path);	
-		prepareScene(true);
+		prepareScene();
 		resetCamera();
 	}
 }

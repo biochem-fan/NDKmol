@@ -53,7 +53,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
  * Signature: (IIIIZZIZZ)V
  */
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
-  (JNIEnv *, jclass, jint, jint, jint, jint, jboolean, jboolean, jint, jboolean, jboolean, jboolean, jboolean);
+  (JNIEnv *, jclass, jint, jint, jint, jint, jboolean, jboolean, jint, jboolean, jboolean, jboolean);
 
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
@@ -61,7 +61,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
  * Signature: ()[F
  */
 JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZoom
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus
 }

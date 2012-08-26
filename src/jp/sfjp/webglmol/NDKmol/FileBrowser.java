@@ -28,14 +28,21 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class FileBrowser extends Activity {
@@ -43,7 +50,8 @@ public class FileBrowser extends Activity {
 	private ListView listView = null;
 	private List<Map<String, String>> dataList;
 	private FileBrowser self;
-	private String currentPath;
+	private String currentPath, selectedFile;
+	private SimpleAdapter adapter;
 
 
 	private List<Map<String,String>> getFileList(String path) {
@@ -88,6 +96,78 @@ public class FileBrowser extends Activity {
 		return ret;
 	}
 
+	private void setFileList() {
+		dataList = getFileList(currentPath);
+		adapter = new SimpleAdapter(
+				self,
+				dataList,
+				android.R.layout.simple_list_item_2,
+				new String[] { "fileName", "structureTitle"},
+				new int[] { android.R.id.text1, android.R.id.text2 }
+		);
+		listView.setAdapter(adapter);
+	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		if (v.getId() != listView.getId()) return;
+	
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.filecontextmenu, menu);
+    	AdapterContextMenuInfo contextMenuInfo = (AdapterContextMenuInfo) menuInfo;
+    	Map<String, String> item = (Map<String, String>) listView.getItemAtPosition(contextMenuInfo.position);
+    	selectedFile = item.get("fileName");
+		menu.setHeaderTitle(selectedFile);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.fileOpen:
+			openSelectedFile();
+			break;
+		case R.id.fileDelete:
+			deleteSelectedFile();
+			break;
+		}
+		
+		return true;
+	}
+	
+	private void deleteSelectedFile() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage("Are you sure to delete " + selectedFile + "?")
+		.setCancelable(true)
+		.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				try {
+					File file = new File(currentPath + selectedFile);
+					file.delete();					
+				} catch (Exception e) {
+					AlertDialog.Builder builder = new AlertDialog.Builder(getApplication());
+					builder.setMessage("Failed to delete " + selectedFile)
+					.setCancelable(false)
+					.setPositiveButton("OK", null);
+					AlertDialog alert = builder.create();
+					alert.show();				
+				}
+				setFileList(); // MEMO: This is expensive. 
+				// Actually we should update dataList and use notifyDataSetChanged.
+			} 
+		})
+		.setNegativeButton("Cancel", null);
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
+		
+	private void openSelectedFile() {
+		Intent i = new Intent();
+		setResult(RESULT_OK, i);
+		i.setData(Uri.parse("file://" + currentPath + selectedFile));
+		finish();
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,33 +180,18 @@ public class FileBrowser extends Activity {
 
 		listView = (ListView)findViewById(R.id.searchResults);
 		dataList = null;
-//		searchButton = (Button)findViewById(R.id.searchButton);
-//		keyword = (EditText)findViewById(R.id.keyword);
-//		searchButton.setOnClickListener(new OnClickListener() {
-//			public void onClick(View v) {
-//			}
-//		});
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Map<String, String> item = (Map<String, String>) listView.getItemAtPosition(position);
-				Log.d("FileBrowser", "Selected " + currentPath + item.get("fileName"));
-				Intent i = new Intent();
-				setResult(RESULT_OK, i);
-				i.setData(Uri.parse("file://" + currentPath + item.get("fileName")));
-				finish();
+				selectedFile = item.get("fileName");
+				openSelectedFile();
 			}
 		});
+		
+		registerForContextMenu(listView);
 
-		dataList = getFileList(currentPath);
-		SimpleAdapter adapter = new SimpleAdapter(
-				self,
-				dataList,
-				android.R.layout.simple_list_item_2,
-				new String[] { "fileName", "structureTitle"},
-				new int[] { android.R.id.text1, android.R.id.text2 }
-		);
-		listView.setAdapter(adapter);
+		setFileList();
 	}
 }

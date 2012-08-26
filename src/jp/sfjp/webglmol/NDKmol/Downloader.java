@@ -73,7 +73,7 @@ public class Downloader {
 
 			progress.setButton(
 					DialogInterface.BUTTON_NEGATIVE,
-					"Cancel",
+					parent.getString(R.string.cancel),
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
 							isKilled = true;

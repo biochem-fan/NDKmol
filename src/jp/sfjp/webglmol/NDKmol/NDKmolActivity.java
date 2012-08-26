@@ -425,172 +425,175 @@ public class NDKmolActivity extends Activity {
 		case R.id.ThickRibbon:
 			view.proteinMode = 0;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Ribbon:
 			view.proteinMode = 1;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.CA_trace:
 			view.proteinMode = 2;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Strand:
 			view.proteinMode = 3;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Tube:
 			view.proteinMode = 4;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Bonds:
 			view.proteinMode = 5;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.MainchainNone:
 			view.proteinMode = 6;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 
 		case R.id.baseLine:
 			view.nucleicAcidMode = 0;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.basePolygon:
 			view.nucleicAcidMode = 1;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.baseNone:
 			view.nucleicAcidMode = 2;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;			
 
 		case R.id.Monomer:
 			view.symmetryMode = 0;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
+			view.resetCamera();
 			glSV.requestRender();
 			break;
 		case R.id.Biomt:
 			view.symmetryMode = 1;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
+			view.resetCamera();
 			glSV.requestRender();
 			break;
 		case R.id.Packing:
 			view.symmetryMode = 2; 
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
+			view.resetCamera();
 			glSV.requestRender();
 			break;
 
 		case R.id.Chainbow:
 			view.colorMode = 0;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Chain:
 			view.colorMode = 1;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Structure:
 			view.colorMode = 2;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Polarity:
 			view.colorMode = 3;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.BFactor:
 			view.colorMode = 4;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 
 		case R.id.Sphere:
 			view.hetatmMode = 0;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Stick:
 			view.hetatmMode = 1;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.Line:
 			view.hetatmMode = 2;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		case R.id.HetatmNone:
 			view.hetatmMode = 3;
 			item.setChecked(true);
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 
 		case R.id.Sidechain:
 			item.setChecked(!item.isChecked());
 			view.showSidechain = !view.showSidechain;
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 
 		case R.id.Cell:
 			item.setChecked(!item.isChecked());
 			view.showUnitcell = !view.showUnitcell;
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 
 		case R.id.Solvent:
 			item.setChecked(!item.isChecked());
 			view.showSolvents = !view.showSolvents;
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 			
 		case R.id.doNotSmoothen:
 			item.setChecked(!item.isChecked());
 			view.doNotSmoothen = !view.doNotSmoothen;
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 			
 		case R.id.symopHetatms:
 			item.setChecked(!item.isChecked());
 			view.symopHetatms = !view.symopHetatms;
-			view.prepareScene(false);
+			view.prepareScene();
 			glSV.requestRender();
 			break;
 		}

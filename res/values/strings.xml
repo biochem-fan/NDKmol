@@ -74,9 +74,9 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="AsRainbow">As rainbow</string>
     <string name="PolarNonpolar">Polar/Nonpolar</string>
     <string name="ByBFactor">By B factor</string>
-    <string name="ShowPacking">show packing</string>
+    <string name="ShowPacking">Show packing</string>
     <string name="ShowUnitCell">Show unit cell</string>
-    <string name="ShowMonomer">show monomer</string>
+    <string name="ShowMonomer">Show monomer</string>
     <string name="ShowBiologicalUnit">Show biological unit</string>
     <string name="Polymer">Polymer</string>
     <string name="AsBFactorTube">As B factor tube</string>
@@ -113,4 +113,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="AsThickRibbon">As thick ribbon</string>
     <string name="SymopHetatms">Apply to HETATMs</string>
     <string name="doNotSmoothen">No smooth sheets</string>
+    <string name="download">Download</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="strucureDetails">Structure Details</string>
 </resources>

@@ -111,4 +111,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="AsThickRibbon">厚いリボン</string>
     <string name="SymopHetatms">低分子も対称操作</string>
     <string name="doNotSmoothen">シートを平滑化しない</string>
+    <string name="download">ダウンロード</string>
+    <string name="delete">削除</string>
+    <string name="cancel">中止</string>
+    <string name="strucureDetails">構造情報</string>
 </resources>

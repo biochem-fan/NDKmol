@@ -202,7 +202,7 @@ public class PubChemSearcher extends Activity {
 					long id) {
 				Map<String, String> item = (Map<String, String>) listView.getItemAtPosition(position);
 				final String PDBid = item.get("structureId");
-				// TODO: 無駄が多い。removeView 使えば再利用できるようになる?
+				// TODO: Can we recycle it by removeView?
 				LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
 				detailsView = inflater.inflate(R.layout.detailview, null);
 
