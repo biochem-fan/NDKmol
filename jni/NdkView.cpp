@@ -490,7 +490,7 @@ void colorByChain(std::vector<int> &atomlist) {
 		if (!atom->valid) continue;
 
 		if (atom->atom != "CA" || atom->hetflag) continue;
-		atom->color.setHSV((float)(atom->chain[0] % 15) / 15, 1, 0.9f);
+		atom->color.setHSV((float)(atom->chain[0] * 5 % 17) / 17, 1, 0.9f);
 	}
 }
 

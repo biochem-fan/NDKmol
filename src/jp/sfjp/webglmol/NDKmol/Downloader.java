@@ -36,7 +36,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-
 public class Downloader {
 	String uri;
 	String dest;
