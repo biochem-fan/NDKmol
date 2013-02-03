@@ -149,8 +149,8 @@ public class PDBSearcher extends Activity {
 			String entry = entries[i];
 			HashMap<String, String> records = new HashMap<String, String>();
 			for (int j = 0, jlim = fields.length; j < jlim; j++) {
-				String startTag = "<" + fields[j] + ">";
-				String endTag = "</" + fields[j] + ">";
+				String startTag = "<dimStructure." + fields[j] + ">";
+				String endTag = "</dimStructure." + fields[j] + ">";
 				int lindex = entry.indexOf(startTag);
 				int rindex = entry.indexOf(endTag);
 				if (lindex < 0 || rindex < 0) continue;
