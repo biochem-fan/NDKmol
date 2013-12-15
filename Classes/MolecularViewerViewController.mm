@@ -324,17 +324,16 @@
     glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
 	glFogf(GL_FOG_END, zFar);
     
-    Mat16 modelviewMatrix = translationMatrix(0, 0, cameraZ);
+    currentModelViewMatrix = translationMatrix(0, 0, cameraZ);
     float ax, ay, az;
 	rotationQ.getAxis(&ax, &ay, &az);
 	Mat16 tmp = rotationMatrix(rotationQ.getAngle(), ax, ay, az);
-    modelviewMatrix = multiplyMatrix(modelviewMatrix, tmp);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
     tmp = translationMatrix(objX, objY, objZ);
-    modelviewMatrix = multiplyMatrix(modelviewMatrix, tmp);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
     
     glUseProgram(shaderProgram);
     glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
-    glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, modelviewMatrix.m);
     glUniform1f(shaderUseVertexColor, 0);
     glUniform4f(shaderObjColor, 0, 1, 0, 1);
     

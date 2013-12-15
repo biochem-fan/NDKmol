@@ -52,7 +52,7 @@ Line::Line() {
 }
 
 void Line::render() {
-//	glPushMatrix();
+	glPushMatrix();
 	setMatrix();
 
 //	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering started. nPoints = %d", nPoints);
@@ -89,6 +89,6 @@ void Line::render() {
 		}
 //		glEnable(GL_LIGHTING);
 	}
-//	glPopMatrix();
+	glPopMatrix();
 //	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering end");
 }

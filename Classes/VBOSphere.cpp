@@ -19,7 +19,8 @@
 
 #include "VBOSphere.hpp"
 #include "SphereGeometry.hpp"
-#import <OpenGLES/ES1/gl.h>
+//#import <OpenGLES/ES1/gl.h>
+#include "GLES.hpp"
 
 int VBOSphere::faceVBO = -1, VBOSphere::vertexVBO = -1, VBOSphere::vertexNormalVBO = -1, VBOSphere::faceCount = -1;
 

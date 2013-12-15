@@ -22,6 +22,7 @@
 #include "stdlib.h"
 
 std::stack<Mat16> glStack;
+Mat16 currentModelViewMatrix;
 
 unsigned int shaderProgram = 0, shaderVertexPosition = 0;
 unsigned int shaderModelViewMatrix = 0, shaderProjectionMatrix = 0;
@@ -48,6 +49,14 @@ const GLchar *fragmentShader =
 "    gl_FragColor = colorOut; \n"
 "} \n";
 
+void glPushMatrix() {
+    glStack.push(currentModelViewMatrix);
+}
+
+void glPopMatrix() {
+    currentModelViewMatrix = glStack.top();
+    glStack.pop();
+}
 
 GLuint CreateShader(const GLchar *vs, const GLchar *fs) {
     char buf[1024];

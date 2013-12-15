@@ -20,6 +20,7 @@
 #include "Renderable.hpp"
 //#import <OpenGLES/ES1/gl.h>
 #include "GLES.hpp"
+#include "math.h"
 
 Renderable::Renderable() {
 	scalex = 1; scaley = 1; scalez = 1;
@@ -59,8 +60,16 @@ Renderable::~Renderable() {
 
 void Renderable::setMatrix() {
 //	glTranslatef(posx, posy, posz);
+    Mat16 tmp = translationMatrix(posx, posy, posz);
+	currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
 //	glRotatef(rot, rotx, roty, rotz);
+    tmp = rotationMatrix(rot / 180 * M_PI, rotx, roty, rotz);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+    
+// TODO: Implement
 //	glScalef(scalex, scaley, scalez);
+
+    glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
 }
 
 //public Renderable(FloatBuffer vertices, ShortBuffer faces) {
@@ -78,7 +87,7 @@ void Renderable::drawChildren() {
 }
 
 void Renderable::render() {
-//	glPushMatrix();
+	glPushMatrix();
     setMatrix();
 	drawChildren();
 
@@ -95,6 +104,7 @@ void Renderable::render() {
 	}
 	if (nFaces > 0) {
 //        glUseProgram(shaderProgram);
+        glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
         glEnableVertexAttribArray(shaderVertexPosition);
         glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
 //        glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
@@ -119,6 +129,6 @@ void Renderable::render() {
         glDisableVertexAttribArray(shaderVertexColor);
 //		glDisableClientState(GL_COLOR_ARRAY);
 	}
-//	glPopMatrix();
+	glPopMatrix();
 }
 

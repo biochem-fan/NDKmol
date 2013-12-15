@@ -26,7 +26,8 @@
 
 class MatRenderable: public Renderable {
 public:
-	std::vector<float*> matrices;
+//	std::vector<float*> matrices;
+    std::vector<Mat16> matrices;
 	MatRenderable();
 	~MatRenderable();
 	void addMatrix(Mat16 &mat);
