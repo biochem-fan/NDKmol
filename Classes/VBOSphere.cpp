@@ -57,22 +57,27 @@ void VBOSphere::render() {
 	glPushMatrix();
 	setMatrix();
 
-	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
-	glDisableClientState(GL_COLOR_ARRAY);
+    glUniform4f(shaderObjColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+    glUniform1f(shaderUseVertexColor, 0);
+//	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+//	glDisableClientState(GL_COLOR_ARRAY);
 	
-	glEnableClientState(GL_VERTEX_ARRAY);
+//	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
-	glVertexPointer(3, GL_FLOAT, 0, 0);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
-	glNormalPointer(GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
-//	glDrawElements(GL_TRIANGLES, VBOSphere::faceCount * 3, GL_UNSIGNED_SHORT, 0);
+    glEnableVertexAttribArray(shaderVertexPosition);
+    glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+//	glVertexPointer(3, GL_FLOAT, 0, 0);
 
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_NORMAL_ARRAY);
+//	glEnableClientState(GL_NORMAL_ARRAY);
+//	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
+//	glNormalPointer(GL_FLOAT, 0, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+	glDrawElements(GL_TRIANGLES, VBOSphere::faceCount * 3, GL_UNSIGNED_SHORT, 0);
+
+//	glDisableClientState(GL_VERTEX_ARRAY);
+//	glDisableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glPopMatrix();
 }

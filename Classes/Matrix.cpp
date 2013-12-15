@@ -73,6 +73,14 @@ Mat16 rotationMatrix(double angle, double ax, double ay, double az) {
     return ret;
 }
 
+Mat16 scaleMatrix(double x, double y, double z) {
+    Mat16 ret = identityMatrix();
+    ret.m[0] = x;
+    ret.m[5] = y;
+    ret.m[10] = z;
+    return ret;
+}
+
 Mat16 translationMatrix(double x, double y, double z) {
     Mat16 ret = identityMatrix();
     ret.m[12] = x;

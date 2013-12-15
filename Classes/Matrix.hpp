@@ -26,6 +26,7 @@ typedef struct Mat16 {
 
 Mat16 matrixFrustum(double left, double right, double bottom, double top, double near, double far);
 Mat16 multiplyMatrix(Mat16 &a, Mat16 &b);
+Mat16 scaleMatrix(double x, double y, double z);
 Mat16 translationMatrix(double x, double y, double z);
 Mat16 rotationMatrix(double angle, double ax, double ay, double az);
 Mat16 identityMatrix();

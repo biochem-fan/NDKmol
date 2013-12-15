@@ -65,8 +65,8 @@ void Renderable::setMatrix() {
 //	glRotatef(rot, rotx, roty, rotz);
     tmp = rotationMatrix(rot / 180 * M_PI, rotx, roty, rotz);
     currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
-    
-// TODO: Implement
+    tmp = scaleMatrix(scalex, scaley, scalez);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
 //	glScalef(scalex, scaley, scalez);
 
     glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
