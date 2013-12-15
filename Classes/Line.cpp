@@ -18,8 +18,8 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Line.hpp"
-#import <OpenGLES/ES1/gl.h>
-
+//#import <OpenGLES/ES1/gl.h>
+#include "GLES.hpp"
 
 Line::Line(std::vector<Vector3> &points) {
 	vertexBuffer = vectorToFloatArray(points);
@@ -52,34 +52,37 @@ Line::Line() {
 }
 
 void Line::render() {
-	glPushMatrix();
+//	glPushMatrix();
 	setMatrix();
 
 //	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering started. nPoints = %d", nPoints);
 	if (nPoints > 0) {
-		glDisable(GL_LIGHTING);
+//		glDisable(GL_LIGHTING);
 		glLineWidth(width);
 		if (vertexColors && colorBuffer != NULL) {
-			glEnableClientState(GL_COLOR_ARRAY);
-			glColorPointer(4, GL_FLOAT, 0, colorBuffer);
+//			glEnableClientState(GL_COLOR_ARRAY);
+//			glColorPointer(4, GL_FLOAT, 0, colorBuffer);
 		} else {
-			glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+//			glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 		}
 
-		glVertexPointer(3,GL_FLOAT, 0, vertexBuffer);
-		glEnableClientState(GL_VERTEX_ARRAY);
+//		glVertexPointer(3,GL_FLOAT, 0, vertexBuffer);
+//		glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableVertexAttribArray(shaderVertexPosition);
+        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
+
 		if (discrete) {
 			glDrawArrays(GL_LINES, 0, nPoints);
 		} else {
 			glDrawArrays(GL_LINE_STRIP, 0, nPoints);
 		}
-		glDisableClientState(GL_VERTEX_ARRAY);
+//		glDisableClientState(GL_VERTEX_ARRAY);
 
 		if (vertexColors) {
-			glDisableClientState(GL_COLOR_ARRAY);
+//			glDisableClientState(GL_COLOR_ARRAY);
 		}
-		glEnable(GL_LIGHTING);
+//		glEnable(GL_LIGHTING);
 	}
-	glPopMatrix();
+//	glPopMatrix();
 //	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering end");
 }
