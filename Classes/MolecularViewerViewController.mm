@@ -71,6 +71,10 @@
 	    shaderVertexPosition = glGetAttribLocation(shaderProgram, "vertexPosition");
         shaderProjectionMatrix = glGetUniformLocation(shaderProgram, "projectionMatrix");
         shaderModelViewMatrix = glGetUniformLocation(shaderProgram, "modelviewMatrix");
+        
+        shaderVertexColor = glGetAttribLocation(shaderProgram, "vertexColor");
+        shaderUseVertexColor = glGetUniformLocation(shaderProgram, "useVertexColor");
+        shaderObjColor = glGetUniformLocation(shaderProgram, "objColor");
 	} else {
         printf("Failed to create shader\n");
     }
@@ -329,9 +333,10 @@
     modelviewMatrix = multiplyMatrix(modelviewMatrix, tmp);
     
     glUseProgram(shaderProgram);
-    glEnableVertexAttribArray(shaderVertexPosition);
     glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
     glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, modelviewMatrix.m);
+    glUniform1f(shaderUseVertexColor, 0);
+    glUniform4f(shaderObjColor, 0, 1, 0, 1);
     
 //  glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();

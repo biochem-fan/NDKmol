@@ -25,19 +25,27 @@ std::stack<Mat16> glStack;
 
 unsigned int shaderProgram = 0, shaderVertexPosition = 0;
 unsigned int shaderModelViewMatrix = 0, shaderProjectionMatrix = 0;
+unsigned int shaderObjColor = 0, shaderUseVertexColor = 0, shaderVertexColor = 0;
 
 const GLchar *vertexShader =
 "attribute vec4 vertexPosition; \n"
 "uniform mat4 modelviewMatrix; \n"
 "uniform mat4 projectionMatrix; \n"
+"uniform vec4 objColor; \n" // FIXME: Do we need alpha?
+"uniform float useVertexColor; \n" // FIXME: should use #define for performance
+"attribute vec4 vertexColor; \n"
+" \n"
+"varying vec4 colorOut; \n"
 "void main() {\n"
 "    gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
+"     colorOut = (useVertexColor > 0.5) ? vertexColor: objColor; \n"
 "} \n";
 
 const GLchar *fragmentShader =
 "precision mediump float; \n"
+"varying vec4 colorOut; \n"
 "void main() { \n"
-"    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); \n"
+"    gl_FragColor = colorOut; \n"
 "} \n";
 
 

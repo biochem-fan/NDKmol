@@ -27,6 +27,8 @@
 extern std::stack<Mat16> glStack;
 extern unsigned int shaderProgram, shaderVertexPosition;
 extern unsigned int shaderModelViewMatrix, shaderProjectionMatrix;
+extern unsigned int shaderObjColor, shaderUseVertexColor, shaderVertexColor;
+
 extern const GLchar *vertexShader, *fragmentShader;
 
 GLuint CreateShader(const GLchar *vs, const GLchar *fs);
