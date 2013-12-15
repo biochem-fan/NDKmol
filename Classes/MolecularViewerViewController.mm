@@ -7,10 +7,13 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import <OpenGLES/EAGLDrawable.h>
 
 #import "MolecularViewerViewController.hh"
 #import "MolecularView.h"
 #import "SettingViewController.h"
+
+#include "GLES.hpp"
 
 @interface MolecularViewerViewController ()
 @property (nonatomic, retain) EAGLContext *context;
@@ -42,7 +45,7 @@
 - (void)awakeFromNib
 {	
 	// GL context creation
-    EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+    EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     if (!aContext)
         NSLog(@"Failed to create ES context");
     else if (![EAGLContext setCurrentContext:aContext])
@@ -60,6 +63,18 @@
     [(MolecularView *)self.view setContext:context];
     [(MolecularView *)self.view setFramebuffer];
 	
+
+    // Initialize Shader
+	shaderProgram = CreateShader(vertexShader, fragmentShader);
+    
+	if (shaderProgram != 0) {
+	    shaderVertexPosition = glGetAttribLocation(shaderProgram, "vertexPosition");
+        shaderProjectionMatrix = glGetUniformLocation(shaderProgram, "projectionMatrix");
+        shaderModelViewMatrix = glGetUniformLocation(shaderProgram, "modelviewMatrix");
+	} else {
+        printf("Failed to create shader\n");
+    }
+    
     // Animation. I don't know about them.
 	animating = FALSE;
     animationFrameInterval = 0;
@@ -285,14 +300,9 @@
 {
     [(MolecularView *)self.view setFramebuffer];
 	
-	glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	float cameraNear = -cameraZ + slabNear;
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    float cameraNear = -cameraZ + slabNear;
 	if (cameraNear < 1) cameraNear = 1;
 	float cameraFar = -cameraZ + slabFar;
 	if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
@@ -302,20 +312,34 @@
 	ymin = -ymax;
 	xmin = ymin * aspect;
 	xmax = ymax * aspect;
-	glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
-	glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
+	Mat16 projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+//	glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+    
+    glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
 	glFogf(GL_FOG_END, zFar);
-	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	
-	glTranslatef(0, 0, cameraZ);
-	float ax, ay, az;
+    
+    Mat16 modelviewMatrix = translationMatrix(0, 0, cameraZ);
+    float ax, ay, az;
 	rotationQ.getAxis(&ax, &ay, &az);
-	glRotatef(180 * rotationQ.getAngle() / M_PI, ax, ay, az);
-	glTranslatef(objX, objY, objZ);
-	
-	nativeGLRender();
+	Mat16 tmp = rotationMatrix(rotationQ.getAngle(), ax, ay, az);
+    modelviewMatrix = multiplyMatrix(modelviewMatrix, tmp);
+    tmp = translationMatrix(objX, objY, objZ);
+    modelviewMatrix = multiplyMatrix(modelviewMatrix, tmp);
+    
+    glUseProgram(shaderProgram);
+    glEnableVertexAttribArray(shaderVertexPosition);
+    glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
+    glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, modelviewMatrix.m);
+    
+//  glMatrixMode(GL_MODELVIEW);
+//	glLoadIdentity();
+//	glTranslatef(0, 0, cameraZ);
+//	glRotatef(180 * rotationQ.getAngle() / M_PI, ax, ay, az);
+//	glTranslatef(objX, objY, objZ);
+
+    nativeGLRender();
     
     [(MolecularView *)self.view presentFramebuffer];
 }

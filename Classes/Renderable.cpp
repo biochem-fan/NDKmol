@@ -18,7 +18,8 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Renderable.hpp"
-#import <OpenGLES/ES1/gl.h>
+//#import <OpenGLES/ES1/gl.h>
+#include "GLES.hpp"
 
 Renderable::Renderable() {
 	scalex = 1; scaley = 1; scalez = 1;
@@ -57,9 +58,9 @@ Renderable::~Renderable() {
 }
 
 void Renderable::setMatrix() {
-	glTranslatef(posx, posy, posz);
-	glRotatef(rot, rotx, roty, rotz);
-	glScalef(scalex, scaley, scalez);
+//	glTranslatef(posx, posy, posz);
+//	glRotatef(rot, rotx, roty, rotz);
+//	glScalef(scalex, scaley, scalez);
 }
 
 //public Renderable(FloatBuffer vertices, ShortBuffer faces) {
@@ -77,18 +78,28 @@ void Renderable::drawChildren() {
 }
 
 void Renderable::render() {
-	glPushMatrix();
-	setMatrix();
+//	glPushMatrix();
+    setMatrix();
 	drawChildren();
 
 	if (vertexColors && colorBuffer != NULL) {
-		glEnableClientState(GL_COLOR_ARRAY);
-		glColorPointer(4, GL_FLOAT, 0, colorBuffer);
+//		glEnableClientState(GL_COLOR_ARRAY);
+//		glColorPointer(4, GL_FLOAT, 0, colorBuffer);
 	} else {
-		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+//		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 	}
 	if (nFaces > 0) {
-		glEnableClientState(GL_VERTEX_ARRAY);
+//        glUseProgram(shaderProgram);
+        glEnableVertexAttribArray(shaderVertexPosition);
+        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
+//        glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
+		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
+        
+//        glDisableVertexAttribArray(shaderVertexPosition);
+//        glUseProgram(0);
+
+/*
+        glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, vertexBuffer);
 		if (vertexNormalBuffer != NULL) {
 			glEnableClientState(GL_NORMAL_ARRAY);
@@ -97,10 +108,11 @@ void Renderable::render() {
 		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
+ */
 	}
 	if (vertexColors) {
-		glDisableClientState(GL_COLOR_ARRAY);
+//		glDisableClientState(GL_COLOR_ARRAY);
 	}
-	glPopMatrix();
+//	glPopMatrix();
 }
 
