@@ -70,6 +70,7 @@ void Renderable::setMatrix() {
 //	glScalef(scalex, scaley, scalez);
 
     glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
+    glUniformMatrix4fv(shaderNormalMatrix, 1, GL_FALSE, transposedInverseMatrix(currentModelViewMatrix).m);
 }
 
 //public Renderable(FloatBuffer vertices, ShortBuffer faces) {
@@ -103,12 +104,15 @@ void Renderable::render() {
 //		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 	}
 	if (nFaces > 0) {
-//        glUseProgram(shaderProgram);
         glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
         glEnableVertexAttribArray(shaderVertexPosition);
         glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
-//        glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
-		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
+		if (vertexNormalBuffer != NULL) {
+            glEnableVertexAttribArray(shaderVertexNormal);
+            glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, vertexNormalBuffer);
+		}
+		
+        glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
         
 //        glDisableVertexAttribArray(shaderVertexPosition);
 //        glUseProgram(0);

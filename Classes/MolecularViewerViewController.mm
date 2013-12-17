@@ -69,8 +69,10 @@
     
 	if (shaderProgram != 0) {
 	    shaderVertexPosition = glGetAttribLocation(shaderProgram, "vertexPosition");
+	    shaderVertexNormal = glGetAttribLocation(shaderProgram, "vertexNormal");
         shaderProjectionMatrix = glGetUniformLocation(shaderProgram, "projectionMatrix");
         shaderModelViewMatrix = glGetUniformLocation(shaderProgram, "modelviewMatrix");
+        shaderNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
         
         shaderVertexColor = glGetAttribLocation(shaderProgram, "vertexColor");
         shaderUseVertexColor = glGetUniformLocation(shaderProgram, "useVertexColor");
@@ -306,6 +308,8 @@
 	
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_CULL_FACE);
+    
     float cameraNear = -cameraZ + slabNear;
 	if (cameraNear < 1) cameraNear = 1;
 	float cameraFar = -cameraZ + slabFar;

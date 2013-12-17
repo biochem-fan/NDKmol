@@ -25,8 +25,8 @@
 #include <stack>
 
 extern std::stack<Mat16> glStack;
-extern unsigned int shaderProgram, shaderVertexPosition;
-extern unsigned int shaderModelViewMatrix, shaderProjectionMatrix;
+extern unsigned int shaderProgram, shaderVertexPosition, shaderVertexNormal;
+extern unsigned int shaderModelViewMatrix, shaderProjectionMatrix, shaderNormalMatrix;
 extern unsigned int shaderObjColor, shaderUseVertexColor, shaderVertexColor;
 extern Mat16 currentModelViewMatrix;
 

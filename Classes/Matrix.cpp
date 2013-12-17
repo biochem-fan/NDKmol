@@ -89,6 +89,49 @@ Mat16 translationMatrix(double x, double y, double z) {
     return ret;
 }
 
+Mat16 inverseMatrix(Mat16 &m) {
+    Mat16 ret;
+    float *mat = m.m;
+    
+    // inverse(M) = t(adj(M)) / det(M)
+    
+    // M:matrix([a0,a4,a8,a12],[a1,a5,a9,a13], [a2,a6,a10,a14],[a3,a7,a11,a15]);
+    double a0 = mat[0], a1 = mat[1], a2 = mat[2], a3 = mat[3],
+           a4 = mat[4], a5 = mat[5], a6 = mat[6], a7 = mat[7],
+           a8 = mat[8], a9 = mat[9], a10 = mat[10], a11 = mat[11],
+           a12 = mat[12], a13 = mat[13], a14 = mat[14], a15 = mat[15];
+    
+    // stardisp: true;
+    // transpose(adjoint(M));
+    ret.m[0] = - (a15*a6 - a14*a7)*a9 + a13*(a11*a6 - a10*a7) + (a10*a15 - a11*a14)*a5;
+    ret.m[1] = (a15*a2 - a14*a3)*a9 - a13*(a11*a2 - a10*a3)- a1*(a10*a15 - a11*a14);
+    ret.m[2] =  a13*(a2*a7 - a3*a6) + a1*(a15*a6 - a14*a7)- (a15*a2 - a14*a3)*a5;
+    ret.m[3] = - (a2*a7 - a3*a6)*a9 - a1*(a11*a6 - a10*a7) + (a11*a2 - a10*a3)*a5;
+    ret.m[4] = (a15*a6 - a14*a7)*a8 - a12*(a11*a6 - a10*a7) - (a10*a15 - a11*a14)*a4;
+    ret.m[5] = - (a15*a2 - a14*a3)*a8 + a12*(a11*a2 - a10*a3) + a0*(a10*a15 - a11*a14);
+    ret.m[6] = - a12*(a2*a7 - a3*a6) - a0*(a15*a6 - a14*a7) + (a15*a2 - a14*a3)*a4;
+    ret.m[7] = (a2*a7 - a3*a6)*a8 + a0*(a11*a6 - a10*a7) - (a11*a2 - a10*a3)*a4;
+    ret.m[8] = a12*(a11*a5 - a7*a9) + a4*(a15*a9 - a11*a13) - (a15*a5 - a13*a7)*a8;
+    ret.m[9] = - a12*(a1*a11 - a3*a9) - a0*(a15*a9 - a11*a13) + (a1*a15 - a13*a3)*a8;
+    ret.m[10] = a0*(a15*a5 - a13*a7) + a12*(a1*a7 - a3*a5) - (a1*a15 - a13*a3)*a4;
+    ret.m[11] = - a0*(a11*a5 - a7*a9) + a4*(a1*a11 - a3*a9) - (a1*a7 - a3*a5)*a8;
+    ret.m[12] = - a12*(a10*a5 - a6*a9) - a4*(a14*a9 - a10*a13) + (a14*a5 - a13*a6)*a8;
+    ret.m[13] = a12*(a1*a10 - a2*a9) + a0*(a14*a9 - a10*a13) - (a1*a14 - a13*a2)*a8;
+    ret.m[14] = - a0*(a14*a5 - a13*a6) - a12*(a1*a6 - a2*a5) + (a1*a14 - a13*a2)*a4;
+    ret.m[15] = a0*(a10*a5 - a6*a9) - a4*(a1*a10 - a2*a9) + (a1*a6 - a2*a5)*a8;
+    
+    double det =  (a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2] + a12 * ret.m[3]);
+    if (det != 0) {
+        double det_inv = 1 / det;
+        for (int i = 0; i < 12; i++) ret.m[i] *= det_inv;
+    } else {
+        printf("Error while inverting matrix.\n");
+        ret = identityMatrix();
+    }
+    
+    return ret;
+}
+
 Mat16 multiplyMatrix(Mat16 &a, Mat16 &b) {
     Mat16 ret = {};
     for (int i = 0; i < 4; i++) {
@@ -99,6 +142,50 @@ Mat16 multiplyMatrix(Mat16 &a, Mat16 &b) {
             }
             ret.m[i + j * 4] = tmp;
         }
+    }
+    
+    return ret;
+}
+
+// t(1 / M) = 1 / t(M)
+Mat16 transposedInverseMatrix(Mat16 &m) {
+    Mat16 ret;
+    float *mat = m.m;
+    
+    // inverse(M) = t(adj(M)) / det(M)
+    
+    // M:matrix([a0,a4,a8,a12],[a1,a5,a9,a13], [a2,a6,a10,a14],[a3,a7,a11,a15]);
+    double a0 = mat[0], a1 = mat[4], a2 = mat[8], a3 = mat[12],
+    a4 = mat[1], a5 = mat[5], a6 = mat[9], a7 = mat[13],
+    a8 = mat[2], a9 = mat[6], a10 = mat[10], a11 = mat[14],
+    a12 = mat[3], a13 = mat[7], a14 = mat[11], a15 = mat[15];
+    
+    // stardisp: true;
+    // transpose(adjoint(M));
+    ret.m[0] = - (a15*a6 - a14*a7)*a9 + a13*(a11*a6 - a10*a7) + (a10*a15 - a11*a14)*a5;
+    ret.m[1] = (a15*a2 - a14*a3)*a9 - a13*(a11*a2 - a10*a3)- a1*(a10*a15 - a11*a14);
+    ret.m[2] =  a13*(a2*a7 - a3*a6) + a1*(a15*a6 - a14*a7)- (a15*a2 - a14*a3)*a5;
+    ret.m[3] = - (a2*a7 - a3*a6)*a9 - a1*(a11*a6 - a10*a7) + (a11*a2 - a10*a3)*a5;
+    ret.m[4] = (a15*a6 - a14*a7)*a8 - a12*(a11*a6 - a10*a7) - (a10*a15 - a11*a14)*a4;
+    ret.m[5] = - (a15*a2 - a14*a3)*a8 + a12*(a11*a2 - a10*a3) + a0*(a10*a15 - a11*a14);
+    ret.m[6] = - a12*(a2*a7 - a3*a6) - a0*(a15*a6 - a14*a7) + (a15*a2 - a14*a3)*a4;
+    ret.m[7] = (a2*a7 - a3*a6)*a8 + a0*(a11*a6 - a10*a7) - (a11*a2 - a10*a3)*a4;
+    ret.m[8] = a12*(a11*a5 - a7*a9) + a4*(a15*a9 - a11*a13) - (a15*a5 - a13*a7)*a8;
+    ret.m[9] = - a12*(a1*a11 - a3*a9) - a0*(a15*a9 - a11*a13) + (a1*a15 - a13*a3)*a8;
+    ret.m[10] = a0*(a15*a5 - a13*a7) + a12*(a1*a7 - a3*a5) - (a1*a15 - a13*a3)*a4;
+    ret.m[11] = - a0*(a11*a5 - a7*a9) + a4*(a1*a11 - a3*a9) - (a1*a7 - a3*a5)*a8;
+    ret.m[12] = - a12*(a10*a5 - a6*a9) - a4*(a14*a9 - a10*a13) + (a14*a5 - a13*a6)*a8;
+    ret.m[13] = a12*(a1*a10 - a2*a9) + a0*(a14*a9 - a10*a13) - (a1*a14 - a13*a2)*a8;
+    ret.m[14] = - a0*(a14*a5 - a13*a6) - a12*(a1*a6 - a2*a5) + (a1*a14 - a13*a2)*a4;
+    ret.m[15] = a0*(a10*a5 - a6*a9) - a4*(a1*a10 - a2*a9) + (a1*a6 - a2*a5)*a8;
+    
+    double det =  (a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2] + a12 * ret.m[3]);
+    if (det != 0) {
+        double det_inv = 1 / det;
+        for (int i = 0; i < 12; i++) ret.m[i] *= det_inv;
+    } else {
+        printf("Error while inverting matrix.\n");
+        ret = identityMatrix();
     }
     
     return ret;

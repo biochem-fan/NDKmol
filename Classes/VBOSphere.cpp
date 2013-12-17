@@ -71,7 +71,11 @@ void VBOSphere::render() {
 //	glEnableClientState(GL_NORMAL_ARRAY);
 //	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
 //	glNormalPointer(GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
+    glEnableVertexAttribArray(shaderVertexNormal);
+    glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, vertexNormalBuffer);
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
 	glDrawElements(GL_TRIANGLES, VBOSphere::faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 //	glDisableClientState(GL_VERTEX_ARRAY);

@@ -24,13 +24,15 @@
 std::stack<Mat16> glStack;
 Mat16 currentModelViewMatrix;
 
-unsigned int shaderProgram = 0, shaderVertexPosition = 0;
-unsigned int shaderModelViewMatrix = 0, shaderProjectionMatrix = 0;
+unsigned int shaderProgram = 0, shaderVertexPosition = 0, shaderVertexNormal = 0;
+unsigned int shaderModelViewMatrix = 0, shaderProjectionMatrix = 0, shaderNormalMatrix = 0;
 unsigned int shaderObjColor = 0, shaderUseVertexColor = 0, shaderVertexColor = 0;
 
 const GLchar *vertexShader =
-"attribute vec4 vertexPosition; \n"
+"attribute vec4 vertexPosition; \n" // INPUT is vec3; the 4th element is automatically set to 1
+"attribute vec4 vertexNormal; \n"
 "uniform mat4 modelviewMatrix; \n"
+"uniform mat4 normalMatrix; \n" // FIXME: should be mat3
 "uniform mat4 projectionMatrix; \n"
 "uniform vec4 objColor; \n" // FIXME: Do we need alpha?
 "uniform float useVertexColor; \n" // FIXME: should use #define for performance
@@ -38,8 +40,20 @@ const GLchar *vertexShader =
 " \n"
 "varying vec4 colorOut; \n"
 "void main() {\n"
-"    gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
-"     colorOut = (useVertexColor > 0.5) ? vertexColor: objColor; \n"
+" \n"
+"     vec4 diffuseLight1 = vec4(0.6, 0.6, 0.6, 1); \n"
+"     vec4 ambientLight1 = vec4(0.2, 0.2, 0.2, 1); \n"
+"     vec4 positionLight1 = vec4(0.0, 0.0, 1.0, 1.0); \n"
+"     vec4 diffuseLight2 = vec4(0.1, 0.1, 0.1, 1); \n"
+"     vec4 positionLight2 = vec4(0.0, 0.0, -1.0, 1.0); \n"
+"     gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
+"     vec3 transformedNormal = normalize(mat3(normalMatrix) * vertexNormal.xyz); \n"
+"     vec4 matColor = (useVertexColor > 0.5) ? vertexColor: objColor; \n"
+"     vec4 diffuse = matColor * diffuseLight1 * abs(dot(vec4(transformedNormal, 1), positionLight1));"
+"     diffuse += matColor * diffuseLight2 * abs(dot(vec4(transformedNormal, 1), positionLight2));"
+"     vec4 ambient = matColor * ambientLight1;"
+"     colorOut = diffuse + ambient; \n"
+"     colorOut.a = 1.0; \n"
 "} \n";
 
 const GLchar *fragmentShader =

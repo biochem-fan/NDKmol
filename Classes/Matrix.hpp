@@ -30,6 +30,8 @@ Mat16 scaleMatrix(double x, double y, double z);
 Mat16 translationMatrix(double x, double y, double z);
 Mat16 rotationMatrix(double angle, double ax, double ay, double az);
 Mat16 identityMatrix();
+Mat16 inverseMatrix(Mat16 &m);
+Mat16 transposedInverseMatrix(Mat16 &m);
 
 //TODO: we might need inverseMatrix
 
