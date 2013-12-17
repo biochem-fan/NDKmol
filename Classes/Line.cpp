@@ -55,6 +55,9 @@ void Line::render() {
 	glPushMatrix();
 	setMatrix();
 
+    glDisableVertexAttribArray(shaderVertexNormal); // disable feeding from an array
+    glVertexAttrib4f(shaderVertexNormal, 0, 0, 0, 0); // instead use this value
+    
 //	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering started. nPoints = %d", nPoints);
 	if (nPoints > 0) {
 //		glDisable(GL_LIGHTING);

@@ -49,6 +49,7 @@ const GLchar *vertexShader =
 "     gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
 "     vec3 transformedNormal = normalize(mat3(normalMatrix) * vertexNormal.xyz); \n"
 "     vec4 matColor = (useVertexColor > 0.5) ? vertexColor: objColor; \n"
+"     if (vertexNormal.w == 0.0) {colorOut = matColor; return;} \n"
 "     vec4 diffuse = matColor * diffuseLight1 * abs(dot(vec4(transformedNormal, 1), positionLight1));"
 "     diffuse += matColor * diffuseLight2 * abs(dot(vec4(transformedNormal, 1), positionLight2));"
 "     vec4 ambient = matColor * ambientLight1;"
