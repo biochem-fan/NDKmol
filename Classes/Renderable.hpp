@@ -43,6 +43,7 @@ public:
 	virtual void setMatrix();
 	void drawChildren();
     virtual void prepareVBO();
+    virtual void deleteVBO();
 //    void destroyVBO();
 	virtual void render();
 	~Renderable();

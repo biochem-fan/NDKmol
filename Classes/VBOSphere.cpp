@@ -22,7 +22,12 @@
 //#import <OpenGLES/ES1/gl.h>
 #include "GLES.hpp"
 
+// These fields overrides the same-named fields in Renderable.
+// Renderable::destroyVBOs refers to those fields, so that 'real' VBO are not destroyed.
+// TODO: Currently, there is no way to actually destroy VBOs.
+
 int VBOSphere::faceVBO = -1, VBOSphere::vertexVBO = -1, VBOSphere::vertexNormalVBO = -1, VBOSphere::faceCount = -1;
+
 
 VBOSphere::VBOSphere() {}
 

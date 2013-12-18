@@ -27,10 +27,9 @@ MatRenderable::MatRenderable() : Renderable() {
 // For OpenGL ES 2.0, we keep Mat16 as it is easier to pass multiplyMatrix
 // FIXME: refactor
 
+// Implicitly Renderable::~Renderable is also called after this.
+// childrens are delete there. CHECK: Is it OK?
 MatRenderable::~MatRenderable() {
-	for (int i = 0, lim = matrices.size(); i < lim; i++) {
-//		delete[] matrices[i];
-	}
 }
 
 // still we need to transpose the matrix

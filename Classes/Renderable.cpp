@@ -33,7 +33,28 @@ Renderable::Renderable() {
 	children.clear();
 }
 
+void Renderable::deleteVBO() {
+    if (vertexVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&vertexVBO);
+        vertexVBO = -1;
+    }
+    if (vertexNormalVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&vertexNormalVBO);
+        vertexNormalVBO = -1;
+    }
+    if (colorVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&colorVBO);
+        colorVBO = -1;
+    }
+    if (faceVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&faceVBO);
+        faceVBO = -1;
+    }
+}
+
 Renderable::~Renderable() {
+    deleteVBO();
+    
 	if (vertexBuffer) {
 		delete vertexBuffer;
 		vertexBuffer = NULL;
@@ -50,6 +71,7 @@ Renderable::~Renderable() {
 		delete colorBuffer;
 		colorBuffer = NULL;
 	}
+    
 	for (int i = 0, lim = children.size(); i < lim; i++) {
 		if (children[i]) {
 			delete children[i];
