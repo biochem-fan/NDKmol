@@ -75,8 +75,6 @@
         shaderNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
         
         shaderVertexColor = glGetAttribLocation(shaderProgram, "vertexColor");
-        shaderUseVertexColor = glGetUniformLocation(shaderProgram, "useVertexColor");
-        shaderObjColor = glGetUniformLocation(shaderProgram, "objColor");
 	} else {
         printf("Failed to create shader\n");
     }
@@ -338,8 +336,6 @@
     
     glUseProgram(shaderProgram);
     glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
-    glUniform1f(shaderUseVertexColor, 0);
-    glUniform4f(shaderObjColor, 0, 1, 0, 1);
     
 //  glMatrixMode(GL_MODELVIEW);
 //	glLoadIdentity();

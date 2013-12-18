@@ -57,8 +57,8 @@ void VBOSphere::render() {
 	glPushMatrix();
 	setMatrix();
 
-    glUniform4f(shaderObjColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
-    glUniform1f(shaderUseVertexColor, 0);
+    glDisableVertexAttribArray(shaderVertexColor);
+    glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 //	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 //	glDisableClientState(GL_COLOR_ARRAY);
 	

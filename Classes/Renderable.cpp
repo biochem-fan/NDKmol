@@ -93,14 +93,13 @@ void Renderable::render() {
 	drawChildren();
 
 	if (vertexColors && colorBuffer != NULL) {
-        glUniform1f(shaderUseVertexColor, 1);
         glEnableVertexAttribArray(shaderVertexColor);
         glVertexAttribPointer(shaderVertexColor, 4, GL_FLOAT, GL_FALSE, 0, colorBuffer);
 //		glEnableClientState(GL_COLOR_ARRAY);
 //		glColorPointer(4, GL_FLOAT, 0, colorBuffer);
 	} else {
-        glUniform1f(shaderUseVertexColor, 0);
-        glUniform4f(shaderObjColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+        glDisableVertexAttribArray(shaderVertexColor);
+        glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 //		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 	}
 	if (nFaces > 0) {
