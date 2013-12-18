@@ -36,6 +36,7 @@ public:
 	Line(float*, int);
 	Line();
 	virtual void render();
+    virtual void prepareVBO();
 };
 
 

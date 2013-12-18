@@ -1,0 +1,23 @@
+* TODO
+
+- Fix lighting
+- Better matrix handling
+- Handle OpenGL context lost
+- Reduce colors to UNSIGNED_BYTE * 3, not FLOAT * 4
+- Refactor VBOSphere & VBOCylinder
+
+* DONE
+
+- Port to OpenGL ES 2.0 (almost DONE)
+- Fix BAD_ACCESS error in VBO
+    This was due to access to nVertices before initialization
+- Make everything VBO (necessary for WebGL)
+
+* Supported platforms
+
+OpenGL ES 2.0 : Almost all iOS, Android 2.2-
+OpenGL ES 3.0 : iOS 7 with A7 core and higher, Android 4.3-
+
+* Things to Try
+
+- Instancing for spheres and cylinders

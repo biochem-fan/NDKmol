@@ -88,8 +88,9 @@ void drawNucleicAcidLadder(Renderable &scene, std::vector<int> &atomlist);
 
 // onSurfaceChanged
 void nativeGLResize () {
-	VBOSphere::prepareVBO();
-	VBOCylinder::prepareVBO();
+//	VBOSphere::prepareVBO();
+//	VBOCylinder::prepareVBO();
+    // TODO: check this in Android. cf. context loss
 }
 
 // onDrawFrame
@@ -285,8 +286,8 @@ void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode
 
 // onSurfaceCreated
 void nativeGLInit() {
-	VBOSphere::prepareVBO();
-	VBOCylinder::prepareVBO();
+//	VBOSphere::prepareVBO();
+//	VBOCylinder::prepareVBO();
 	
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);

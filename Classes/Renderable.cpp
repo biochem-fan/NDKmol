@@ -73,12 +73,6 @@ void Renderable::setMatrix() {
     glUniformMatrix3fv(shaderNormalMatrix, 1, GL_FALSE, transposedInverseMatrix9(currentModelViewMatrix).m);
 }
 
-//public Renderable(FloatBuffer vertices, ShortBuffer faces) {
-//	vertexBuffer = vertices;
-//	faceBuffer = faces;
-//}
-
-
 void Renderable::drawChildren() {
 //	__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering children started");
 	for (int i = 0; i < children.size(); i++) {
@@ -87,14 +81,48 @@ void Renderable::drawChildren() {
 	}
 }
 
+void Renderable::prepareVBO() {
+    // TODO: Implement me. We need nVertices and nFaces here.
+    GLuint vbo[4];
+	glGenBuffers(4, vbo);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float), vertexBuffer, GL_STATIC_DRAW);
+	vertexVBO = vbo[0];
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float), vertexNormalBuffer, GL_STATIC_DRAW);
+	vertexNormalVBO = vbo[1];
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
+	glBufferData (GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof(short), faceBuffer, GL_STATIC_DRAW);
+	faceVBO = vbo[2];
+	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    if (vertexColors) {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+        glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float) * 4 / 3, colorBuffer, GL_STATIC_DRAW);
+        colorVBO = vbo[3];
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+}
+
 void Renderable::render() {
+    if (vertexVBO == -1) {
+        prepareVBO();
+     }
+    
 	glPushMatrix();
     setMatrix();
 	drawChildren();
 
 	if (vertexColors && colorBuffer != NULL) {
         glEnableVertexAttribArray(shaderVertexColor);
-        glVertexAttribPointer(shaderVertexColor, 4, GL_FLOAT, GL_FALSE, 0, colorBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+        glVertexAttribPointer(shaderVertexColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 //		glEnableClientState(GL_COLOR_ARRAY);
 //		glColorPointer(4, GL_FLOAT, 0, colorBuffer);
 	} else {
@@ -103,15 +131,20 @@ void Renderable::render() {
 //		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 	}
 	if (nFaces > 0) {
-        glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
         glEnableVertexAttribArray(shaderVertexPosition);
-        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
+    	glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    	glBindBuffer(GL_ARRAY_BUFFER, 0);
 		if (vertexNormalBuffer != NULL) {
+            glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
             glEnableVertexAttribArray(shaderVertexNormal);
-            glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, vertexNormalBuffer);
+            glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 		}
 		
-        glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+        glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         
 //        glDisableVertexAttribArray(shaderVertexPosition);
 //        glUseProgram(0);

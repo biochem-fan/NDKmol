@@ -27,7 +27,10 @@ class Renderable {
 public:
 	float *vertexBuffer, *colorBuffer, *vertexNormalBuffer;
 	unsigned short *faceBuffer;
-	int nFaces;
+    int faceVBO = -1, vertexVBO = -1, vertexNormalVBO = -1, colorVBO = -1;
+    
+	int nFaces = 0; // number of Faces / 3. nFace * 3 (vert/face) * sizeof(short) is the buffer size
+    int nVertices = 0; // number of vertices * 3(x, y, z). nVertices * sizeof(float) is the buffer size
 	float scalex, scaley, scalez;
 	float posx, posy, posz;
 	float rot, rotx, roty, rotz;
@@ -39,6 +42,8 @@ public:
 	Renderable();
 	virtual void setMatrix();
 	void drawChildren();
+    virtual void prepareVBO();
+//    void destroyVBO();
 	virtual void render();
 	~Renderable();
 };

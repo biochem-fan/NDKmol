@@ -29,7 +29,7 @@ private:
 public:
 	VBOSphere();
 	VBOSphere(float x, float y, float z, float radius, Color c);
-	static void prepareVBO();
+	void prepareVBO();
 	virtual void render();
 };
 

@@ -57,7 +57,8 @@ void RibbonStrip::initMesh(float *points1, float *points2, std::vector<Color> &c
 	vertexNormalBuffer = new float[(size * 8 + 4) * 3];
 	faceBuffer = new unsigned short[(size * 8 + 4) * 3];
 	nFaces = ((size - 1) * 8) * 3; // FIX: We should cap ends (+4)
-	
+    nVertices = (size * 8 + 4) * 3;
+    
 	float *vb = vertexBuffer;
 	unsigned short *fb = faceBuffer;
 	
@@ -189,6 +190,7 @@ void RibbonStrip::initMesh(float *points1, float *points2, std::vector<Color> &c
 	vertexNormalBuffer = new float[size * 2 * 3];
 	faceBuffer = new unsigned short[size * 2 * 3];
 	nFaces = (size - 1) * 2 * 3;
+    nVertices = size * 2 * 3;
 	
 	int vertexOffset = 0, faceOffset = 2;
 	float *vb = vertexBuffer;

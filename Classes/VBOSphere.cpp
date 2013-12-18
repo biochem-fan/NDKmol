@@ -35,18 +35,19 @@ VBOSphere::VBOSphere(float x, float y, float z, float radius, Color c) {
 void VBOSphere::prepareVBO() {
 	GLuint vbo[3];
 	glGenBuffers(3, vbo);
-
+    
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::nVertices * 3 * 4, SphereGeometry::getVertexBuffer(), GL_STATIC_DRAW);
+    
+	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::getnVertices() * 3 * 4, SphereGeometry::getVertexBuffer(), GL_STATIC_DRAW);
 	vertexVBO = vbo[0];
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::nVertices * 3 * 4, SphereGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::getnVertices() * 3 * 4, SphereGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
 	vertexNormalVBO = vbo[1];
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
-	faceCount = SphereGeometry::nFaces;
+	faceCount = SphereGeometry::getnFaces();
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
 	glBufferData (GL_ELEMENT_ARRAY_BUFFER, faceCount * 3 * 2, SphereGeometry::getFaceBuffer(), GL_STATIC_DRAW);
 	faceVBO = vbo[2];
@@ -54,9 +55,12 @@ void VBOSphere::prepareVBO() {
 }
 
 void VBOSphere::render() {
+    if (vertexVBO == -1) {
+        prepareVBO();
+    }
 	glPushMatrix();
 	setMatrix();
-
+    
     glDisableVertexAttribArray(shaderVertexColor);
     glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 //	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
@@ -73,10 +77,10 @@ void VBOSphere::render() {
 //	glNormalPointer(GL_FLOAT, 0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
     glEnableVertexAttribArray(shaderVertexNormal);
-    glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, vertexNormalBuffer);
+    glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
     
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
-	glDrawElements(GL_TRIANGLES, VBOSphere::faceCount * 3, GL_UNSIGNED_SHORT, 0);
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
 //	glDisableClientState(GL_VERTEX_ARRAY);
 //	glDisableClientState(GL_NORMAL_ARRAY);

@@ -23,15 +23,17 @@
 class CylinderGeometry {
 private:
 	static float *vertexBuffer, *vertexNormalBuffer;
-	static short *faceBuffer;
+	static unsigned short *faceBuffer;
 	static const int cylinderQuality = 8;
 	static void prepare(int div);
-
+	static int nVertices, nFaces;
+    
 public:
 	static float *getVertexBuffer();
 	static float *getVertexNormalBuffer();
-	static short *getFaceBuffer();
-	static int nVertices, nFaces;
+	static unsigned short *getFaceBuffer();
+    static int getnVertices();
+    static int getnFaces();
 };
 
 #endif
