@@ -70,7 +70,7 @@ void Renderable::setMatrix() {
 //	glScalef(scalex, scaley, scalez);
 
     glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
-    glUniformMatrix4fv(shaderNormalMatrix, 1, GL_FALSE, transposedInverseMatrix(currentModelViewMatrix).m);
+    glUniformMatrix3fv(shaderNormalMatrix, 1, GL_FALSE, transposedInverseMatrix9(currentModelViewMatrix).m);
 }
 
 //public Renderable(FloatBuffer vertices, ShortBuffer faces) {

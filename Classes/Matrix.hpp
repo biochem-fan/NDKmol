@@ -24,6 +24,10 @@ typedef struct Mat16 {
 	float m[16];
 } Mat16;
 
+typedef struct Mat9 {
+	float m[9];
+} Mat9;
+
 Mat16 matrixFrustum(double left, double right, double bottom, double top, double near, double far);
 Mat16 multiplyMatrix(Mat16 &a, Mat16 &b);
 Mat16 scaleMatrix(double x, double y, double z);
@@ -31,6 +35,7 @@ Mat16 translationMatrix(double x, double y, double z);
 Mat16 rotationMatrix(double angle, double ax, double ay, double az);
 Mat16 identityMatrix();
 Mat16 inverseMatrix(Mat16 &m);
+Mat9 transposedInverseMatrix9(Mat16 &m);
 Mat16 transposedInverseMatrix(Mat16 &m);
 
 //TODO: we might need inverseMatrix

@@ -179,13 +179,51 @@ Mat16 transposedInverseMatrix(Mat16 &m) {
     ret.m[14] = - a0*(a14*a5 - a13*a6) - a12*(a1*a6 - a2*a5) + (a1*a14 - a13*a2)*a4;
     ret.m[15] = a0*(a10*a5 - a6*a9) - a4*(a1*a10 - a2*a9) + (a1*a6 - a2*a5)*a8;
     
-    double det =  (a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2] + a12 * ret.m[3]);
+    double det =  a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2] + a12 * ret.m[3];
     if (det != 0) {
         double det_inv = 1 / det;
         for (int i = 0; i < 12; i++) ret.m[i] *= det_inv;
     } else {
         printf("Error while inverting matrix.\n");
         ret = identityMatrix();
+    }
+    
+    return ret;
+}
+
+// for transformation of normal vectors.
+// Condition: mat[4, ] == c(0, 0, 0, 1)
+Mat9 transposedInverseMatrix9(Mat16 &m) {
+    Mat9 ret;
+    float *mat = m.m;
+    
+    // inverse(M) = t(adj(M)) / det(M)
+    
+    double a0 = mat[0], a1 = mat[4], a2 = mat[8],
+    a4 = mat[1], a5 = mat[5], a6 = mat[9],
+    a8 = mat[2], a9 = mat[6], a10 = mat[10];
+    
+    // stardisp: true;
+    // transpose(adjoint(M));
+    
+    ret.m[0] = - a6 * a9 + a10 * a5;
+    ret.m[1] = a2 * a9 - a1 * a10;
+    ret.m[2] = a1 * a6- a2 * a5;
+    ret.m[3] = a6 * a8  - a10 * a4;
+    ret.m[4] = - a2 * a8  + a0 * a10;
+    ret.m[5] = - a0 * a6 + a2 * a4;
+    ret.m[6] = a4 * a9 - a5 * a8;
+    ret.m[7] =  - a0 * a9 + a1 * a8;
+    ret.m[8] = a0 * a5 - a1 * a4;
+
+    
+    double det =  a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2];
+    if (det != 0) {
+        double det_inv = 1 / det;
+        for (int i = 0; i < 12; i++) ret.m[i] *= det_inv;
+    } else {
+        printf("Error while inverting matrix.\n");
+        //ret = identityMatrix(); // TODO: report this error to the caller
     }
     
     return ret;

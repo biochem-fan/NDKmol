@@ -32,7 +32,7 @@ const GLchar *vertexShader =
 "attribute vec4 vertexPosition; \n" // INPUT is vec3; the 4th element is automatically set to 1
 "attribute vec4 vertexNormal; \n"
 "uniform mat4 modelviewMatrix; \n"
-"uniform mat4 normalMatrix; \n" // FIXME: should be mat3
+"uniform mat3 normalMatrix; \n"
 "uniform mat4 projectionMatrix; \n"
 "uniform vec4 objColor; \n" // FIXME: Do we need alpha?
 "uniform float useVertexColor; \n" // FIXME: should use #define for performance
@@ -47,7 +47,7 @@ const GLchar *vertexShader =
 "     vec4 diffuseLight2 = vec4(0.1, 0.1, 0.1, 1); \n"
 "     vec4 positionLight2 = vec4(0.0, 0.0, -1.0, 1.0); \n"
 "     gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
-"     vec3 transformedNormal = normalize(mat3(normalMatrix) * vertexNormal.xyz); \n"
+"     vec3 transformedNormal = normalize(normalMatrix * vertexNormal.xyz); \n"
 "     vec4 matColor = (useVertexColor > 0.5) ? vertexColor: objColor; \n"
 "     if (vertexNormal.w == 0.0) {colorOut = matColor; return;} \n"
 "     vec4 diffuse = matColor * diffuseLight1 * abs(dot(vec4(transformedNormal, 1), positionLight1));"
