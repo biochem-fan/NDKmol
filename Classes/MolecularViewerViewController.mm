@@ -219,7 +219,7 @@
 // Rebuild scene
 - (void)viewWillAppear:(BOOL)animated
 {
-	//    [self startAnimation]; // FIXME: "correct" way of disabling this
+	//[self startAnimation]; // FIXME: "correct" way of disabling this
 	
 	settingOpened = FALSE;
 	[self.navigationController setNavigationBarHidden: TRUE];
@@ -300,8 +300,25 @@
     }
 }
 
+// Reference: http://stackoverflow.com/questions/1738315/calculate-fps-frames-per-second-for-iphone-app
+static CFTimeInterval prevTime;
+static int fpsCounter;
+static int fpsFrame = 15;
+
+static void calcFps() {
+    fpsCounter++;
+    if (fpsCounter >= fpsFrame) {
+        CFTimeInterval currentTime = CFAbsoluteTimeGetCurrent();
+        NSLog(@"FPS: %d", (int)(fpsFrame / (currentTime - prevTime)));
+        prevTime = currentTime;
+        fpsCounter = 0;
+    }
+}
+
+
 - (void)drawFrame
 {
+    calcFps();
     [(MolecularView *)self.view setFramebuffer];
 	
     glClearColor(0, 0, 0, 1);

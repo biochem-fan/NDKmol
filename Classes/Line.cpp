@@ -52,13 +52,13 @@ Line::Line() {
 }
 
 void Line::prepareVBO() {
- GLuint vbo[2];
- glGenBuffers(2, vbo);
+    GLuint vbo[2];
+    glGenBuffers(2, vbo);
 
- glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
- glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 4, vertexBuffer, GL_STATIC_DRAW);
- vertexVBO = vbo[0];
- glBindBuffer(GL_ARRAY_BUFFER, 0); 
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 4, vertexBuffer, GL_STATIC_DRAW);
+    vertexVBO = vbo[0];
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void Line::render() {

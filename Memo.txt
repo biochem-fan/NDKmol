@@ -9,8 +9,11 @@
    (avoid static?)
 - Instancing for spheres and cylinders
 - FPS monitor
+- Autorotate
 - Interlaved array
-
+- Improve MatRenderer (reverse loop order for better cache hit)
+- Better packing diagram (bring back to the cell)
+- Stereo
 - Picker
 - Labels
 
@@ -20,6 +23,8 @@
 - Fix BAD_ACCESS error in VBO
     This was due to access to nVertices before initialization
 - Make everything VBO (necessary for WebGL)
+    But how much VRAM do we have?
+    Can we kill vertexBuffer, etc after uploading it to VRAM?
 
 * Supported platforms
 
