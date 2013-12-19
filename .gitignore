@@ -1,0 +1,6 @@
+.classpath
+.externalToolBuilders/
+.project
+bin/
+libs/
+obj/
