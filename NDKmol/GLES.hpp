@@ -21,6 +21,7 @@
 #define GLES_INCLUDED
 
 #ifdef __ANDROID__
+#include <android/log.h>
 #define OPENGL_ES1
 #include <GLES/gl.h>
 #else // iOS OpenGL 2.0

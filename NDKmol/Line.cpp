@@ -101,9 +101,14 @@ void Line::render() {
 			glDrawArrays(GL_LINE_STRIP, 0, nPoints);
 		}
 
-		if (vertexColors) {
-			glDisableClientState(GL_COLOR_ARRAY);
-		}
+        if (vertexColors) {
+#ifdef OPENGL_ES1
+            glDisableClientState(GL_COLOR_ARRAY);
+#else
+            glDisableVertexAttribArray(shaderVertexColor);
+#endif
+        }
+        
 #ifdef OPENGL_ES1
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_LIGHTING);

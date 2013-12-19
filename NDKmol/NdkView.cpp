@@ -18,7 +18,7 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Atom.h"
-#include "NdkView.hpp"
+#include "NdkView.h"
 #include <cmath>
 #include <vector>
 #include <set>
@@ -42,7 +42,7 @@
 #include "Protein.hpp"
 #include "View.hpp"
 #ifdef __ANDROID__
-#include "NdkView.h"
+#include "NdkView.hpp"
 #include <android/log.h>
 #endif
 
@@ -135,6 +135,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
 (JNIEnv *env, jclass clasz, jint proteinMode, jint hetatmMode, jint symmetryMode, jint colorMode,
 		jboolean showSidechain, jboolean showUnitcell, jint nucleicAcidMode, jboolean showSolvents,
 		jboolean doNotSmoothen, jboolean symopHetatms) {
+	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","hetatm:%d, symMode:%d", hetatmMode, symmetryMode);
 	buildScene(proteinMode, hetatmMode, symmetryMode, colorMode, showSidechain, showUnitcell,
 				nucleicAcidMode, showSolvents, false/*resetView*/, doNotSmoothen, symopHetatms);
 }
@@ -152,7 +153,7 @@ JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZ
 
 	nativeAdjustZoom(array, array + 1, array + 2, array + 3, array + 4, array + 5, (symmetryMode ==  SYMOP_BIOMT));
 
-	array[6] =100; // maxD; // FIXME: Is this used??
+	array[6] =800; // maxD; // FIXME: Is this used??
 	env->ReleaseFloatArrayElements(ret, array, 0);
 	return ret;
 }
@@ -244,6 +245,7 @@ void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode
 		scene = NULL;
 	}
 	if (protein == NULL) return;
+
 
 	scene = new Renderable();
 	Renderable *asu = new Renderable();
@@ -349,16 +351,18 @@ void nativeGLInit() {
 	
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDepthFunc(GL_LEQUAL);
+	glDisable(GL_DITHER);
+    
+#ifdef OPENGL_ES1
 	glShadeModel(GL_SMOOTH);
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_POINT_SMOOTH);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH); // FIXME: Check if this is working.
 	glLightModelx(GL_LIGHT_MODEL_TWO_SIDE, 1); // double sided
 	glEnable(GL_COLOR_MATERIAL);
-	glDepthFunc(GL_LEQUAL);
-	glDisable(GL_DITHER);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	float f1[] = {0.4f, 0.4f, 0.4f, 1};
@@ -384,6 +388,7 @@ void nativeGLInit() {
 	glFogfv(GL_FOG_COLOR, f6);
 	glFogf(GL_FOG_DENSITY, 0.3f);
 	gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE);
+#endif
 #endif
 }
 
