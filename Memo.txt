@@ -1,5 +1,7 @@
 * TODO
 
+- !! In real device, changing symmetry mode (packing to others) leads to blank screen
+
 - Fix lighting
 - Better matrix handling
 - Handle OpenGL context lost

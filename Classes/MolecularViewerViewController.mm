@@ -219,7 +219,7 @@
 // Rebuild scene
 - (void)viewWillAppear:(BOOL)animated
 {
-	//[self startAnimation]; // FIXME: "correct" way of disabling this
+//	[self startAnimation]; // FIXME: "correct" way of disabling this
 	
 	settingOpened = FALSE;
 	[self.navigationController setNavigationBarHidden: TRUE];

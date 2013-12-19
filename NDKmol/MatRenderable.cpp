@@ -28,7 +28,7 @@ MatRenderable::MatRenderable() : Renderable() {
 // FIXME: refactor
 
 // Implicitly Renderable::~Renderable is also called after this.
-// childrens are delete there. CHECK: Is it OK?
+// children are deleted there. CHECK: Is it OK?
 MatRenderable::~MatRenderable() {
 }
 
