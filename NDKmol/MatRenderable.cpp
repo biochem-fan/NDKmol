@@ -18,21 +18,24 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "MatRenderable.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
+#include "GLES.hpp"
 
 MatRenderable::MatRenderable() : Renderable() {
 }
 
+// For OpenGL ES 2.0, we keep Mat16 as it is easier to pass multiplyMatrix
+// FIXME: refactor
+
+// Implicitly Renderable::~Renderable is also called after this.
+// children are deleted there. CHECK: Is it OK?
 MatRenderable::~MatRenderable() {
-	for (int i = 0, lim = matrices.size(); i < lim; i++) {
-		delete[] matrices[i];
-	}
 }
 
+// we need to transpose the matrix
 void MatRenderable::addMatrix(Mat16 &mat) {
-	float *matrix = new float[16];
-
+	Mat16 tmp;
+    float *matrix = tmp.m;
+    
 	matrix[0] = mat.m[0];
 	matrix[4] = mat.m[1];
 	matrix[8] = mat.m[2];
@@ -50,7 +53,7 @@ void MatRenderable::addMatrix(Mat16 &mat) {
 	matrix[11] = mat.m[14];
 	matrix[15] = mat.m[15];
 
-	matrices.push_back(matrix);
+	matrices.push_back(tmp);
 }
 
 void MatRenderable::render() {
@@ -58,8 +61,12 @@ void MatRenderable::render() {
 	setMatrix();
 
 	for (int i = 0, lim = matrices.size(); i < lim; i++) {
-		glPushMatrix(); // FIXME: crash!
-		glMultMatrixf(matrices[i]);
+		glPushMatrix(); // FIXME: crash! <- What??
+#ifdef OPENGL_ES1
+		glMultMatrixf(matrices[i].m);
+#else
+        currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, matrices[i]);
+#endif
 		drawChildren();
 		glPopMatrix();
 	}

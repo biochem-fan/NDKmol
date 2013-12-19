@@ -19,11 +19,10 @@
 
 #include "VBOCylinder.hpp"
 #include "CylinderGeometry.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
+#include "GLES.hpp"
 #include <cmath>
 
-int VBOCylinder::faceVBO = -1, VBOCylinder::vertexVBO = -1, VBOCylinder::vertexNormalVBO = -1, VBOCylinder::faceCount = -1;
+int VBOCylinder::faceVBO = -1, VBOCylinder::vertexVBO = -1, VBOCylinder::vertexNormalVBO = -1, VBOCylinder::faceCount = 0;
 
 VBOCylinder::VBOCylinder() {}
 
@@ -54,48 +53,65 @@ void VBOCylinder::prepareVBO() {
 	glGenBuffers(3, vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, CylinderGeometry::nVertices * 3 * 4, CylinderGeometry::getVertexBuffer(), GL_STATIC_DRAW);
+    
+	glBufferData(GL_ARRAY_BUFFER, CylinderGeometry::getnVertices() * 3 * 4, CylinderGeometry::getVertexBuffer(), GL_STATIC_DRAW);
 	vertexVBO = vbo[0];
-
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, CylinderGeometry::nVertices * 3 * 4, CylinderGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, CylinderGeometry::getnVertices() * 3 * 4, CylinderGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
 	vertexNormalVBO = vbo[1];
-
-	faceCount = CylinderGeometry::nFaces;
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	faceCount = CylinderGeometry::getnFaces();
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
 	glBufferData (GL_ELEMENT_ARRAY_BUFFER, faceCount * 3 * 2, CylinderGeometry::getFaceBuffer(), GL_STATIC_DRAW);
 	faceVBO = vbo[2];
-
-	__android_log_print(ANDROID_LOG_DEBUG,"VBOCylinder", "prepared VBOs: vertex %d normal %d face %d", vertexVBO, vertexNormalVBO, faceVBO);
-
-	// unbind -- IMPORTANT! otherwise, GL will crash!
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void VBOCylinder::render() {
+    if (vertexVBO == -1) {
+        prepareVBO();
+    }
 	glPushMatrix();
 	setMatrix();
-
-//	__android_log_print(ANDROID_LOG_DEBUG,"VBOCylinder", "rendering VBOs: Num %d vertex %d normal %d face %d", faceCount, vertexVBO, vertexNormalVBO, faceVBO);
+    
+#ifdef OPENGL_ES1
 	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+	glDisableClientState(GL_COLOR_ARRAY);
+#else
+    glDisableVertexAttribArray(shaderVertexColor);
+    glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+#endif
 
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+#ifdef OPENGL_ES1
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
+#else
+	glEnableVertexAttribArray(shaderVertexPosition);
+    glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+#endif
 
-	glEnableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
+#ifdef OPENGL_ES1
+	glEnableClientState(GL_NORMAL_ARRAY);
 	glNormalPointer(GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
-	glDrawElements(GL_TRIANGLES, VBOCylinder::faceCount * 3, GL_UNSIGNED_SHORT, 0);
+#else
+	glEnableVertexAttribArray(shaderVertexNormal);
+    glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+#endif
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
+#ifdef OPENGL_ES1
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-
+#endif
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glPopMatrix();
 }
-

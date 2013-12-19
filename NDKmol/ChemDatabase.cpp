@@ -23,6 +23,9 @@ bool ChemDatabase::ready = false;
 std::map<std::string, unsigned int> ChemDatabase::ElementColors;
 std::map<std::string, float> ChemDatabase::vdwRadii;
 
+
+const float ChemDatabase::defaultRadius = 1.5f;
+
 Color ChemDatabase::getColor(std::string elem) {
 	if (!ready) prepare();
 

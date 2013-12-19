@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>English</string>
+		<key>CFBundleDisplayName</key>
+		<string>${PRODUCT_NAME}</string>
+		<key>CFBundleExecutable</key>
+		<string>${EXECUTABLE_NAME}</string>
+		<key>CFBundleIconFile</key>
+		<string>icon.png</string>
+		<key>CFBundleDocumentTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeName</key>
+				<string>Molecular Coordinate File</string>
+				<key>CFBundleTypeRole</key>
+				<string>Viewer</string>
+				<key>LSHandlerRank</key>
+				<string>Owner</string>
+				<key>LSItemContentTypes</key>
+				<array>
+					<string>org.rcsb.protein-data-bank</string>
+				</array>
+			</dict>
+		</array>
+		
+		<key>CFBundleIdentifier</key>
+		<string>com.yourcompany.${PRODUCT_NAME:rfc1034identifier}</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>${PRODUCT_NAME}</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>1.0</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSMainNibFile</key>
+		<string>MainWindow</string>
+		<key>NSMainNibFile~ipad</key>
+		<string>MainWindow-iPad</string>
+		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UIFileSharingEnabled</key>
+		<true/>
+		<key>UTExportedTypeDeclarations</key>
+		<array>
+			<dict>
+				<key>UTTypeConformsTo</key>
+				<array>
+					<string>public.plain-text</string>
+					<string>public.text</string>
+				</array>
+				<key>UTTypeDescription</key>
+				<string>Protein Data Bank</string>
+				<key>UTTypeIdentifier</key>
+				<string>org.rcsb.protein-data-bank</string>
+				<key>UTTypeTagSpecification</key>
+				<dict>
+					<key>public.filename-extension</key>
+					<string>pdb</string>
+					<key>public.mime-type</key>
+					<string>chemical/x-pdb</string>
+				</dict>
+			</dict>
+		</array>
+	</dict>
+</plist>

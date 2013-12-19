@@ -18,9 +18,7 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Line.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
-
+#include "GLES.hpp"
 
 Line::Line(std::vector<Vector3> &points) {
 	vertexBuffer = vectorToFloatArray(points);
@@ -52,11 +50,21 @@ Line::Line() {
 	nPoints = 0;
 }
 
+void Line::prepareVBO() {
+    GLuint vbo[2];
+    glGenBuffers(2, vbo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glBufferData(GL_ARRAY_BUFFER, nPoints * 3 * 4, vertexBuffer, GL_STATIC_DRAW);
+    vertexVBO = vbo[0];
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void Line::render() {
 	glPushMatrix();
 	setMatrix();
 
-//	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering started. nPoints = %d", nPoints);
+#ifdef OPENGL_ES1
 	if (nPoints > 0) {
 		glDisable(GL_LIGHTING);
 		glLineWidth(width);
@@ -69,18 +77,38 @@ void Line::render() {
 
 		glVertexPointer(3,GL_FLOAT, 0, vertexBuffer);
 		glEnableClientState(GL_VERTEX_ARRAY);
+#else
+    glDisableVertexAttribArray(shaderVertexNormal); // disable feeding from an array
+    glVertexAttrib4f(shaderVertexNormal, 0, 0, 0, 0); // instead use this value
+    
+	if (nPoints > 0) {
+		glLineWidth(width);
+		if (vertexColors && colorBuffer != NULL) {
+            glEnableVertexAttribArray(shaderVertexColor);
+            glVertexAttribPointer(shaderVertexColor, 4, GL_FLOAT, GL_FALSE, 0, colorBuffer);
+		} else {
+            glDisableVertexAttribArray(shaderVertexColor);
+            glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+		}
+
+        glEnableVertexAttribArray(shaderVertexPosition);
+        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
+#endif
+
 		if (discrete) {
 			glDrawArrays(GL_LINES, 0, nPoints);
 		} else {
 			glDrawArrays(GL_LINE_STRIP, 0, nPoints);
 		}
-		glDisableClientState(GL_VERTEX_ARRAY);
 
 		if (vertexColors) {
 			glDisableClientState(GL_COLOR_ARRAY);
 		}
+#ifdef OPENGL_ES1
+		glDisableClientState(GL_VERTEX_ARRAY);
 		glEnable(GL_LIGHTING);
+#endif
+
 	}
 	glPopMatrix();
-//	__android_log_print(ANDROID_LOG_DEBUG,"Line","rendering end");
 }

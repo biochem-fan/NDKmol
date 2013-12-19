@@ -20,7 +20,6 @@
 #ifndef VIEW_INCLUDED
 #define VIEW_INCLUDED
 
-
 extern Atom *atoms;
 extern Protein *protein;
 extern float curveWidth;
@@ -54,4 +53,5 @@ extern float curveWidth;
 #define COLOR_SS 2
 #define COLOR_POLAR 3
 #define COLOR_B_FACTOR 4
+
 #endif

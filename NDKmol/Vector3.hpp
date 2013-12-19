@@ -20,9 +20,7 @@
 #ifndef VECTOR3_INCLUDED
 #define VECTOR3_INCLUDED
 
-typedef struct Mat16 {
-	float m[16];
-} Mat16;
+#include "Matrix.hpp"
 
 class Vector3 {
 public:

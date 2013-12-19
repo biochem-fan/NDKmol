@@ -30,9 +30,10 @@ private:
 	static std::map<std::string, float> vdwRadii;
 	static bool ready;
 	static void prepare();
+
 public:
-	static const unsigned int defaultColor = 0xCCCCCCU;
-	static const float defaultRadius = 1.5f;
+	static const unsigned int defaultColor = 0xCCCCCC;
+	static const float defaultRadius; // initialization moved to .cpp to avoid use of GNU extension
 	static Color getColor(std::string elem);
 	static float getVdwRadius(std::string elem);
 };

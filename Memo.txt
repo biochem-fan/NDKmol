@@ -1,0 +1,40 @@
+* TODO
+
+- !! In real device, changing symmetry mode (packing to others) leads to blank screen
+
+- Fix lighting
+- Better matrix handling
+- Handle OpenGL context lost
+
+- Refactor VBOSphere & VBOCylinder
+- Refactor Sphere/Cylinder Geometory
+   (avoid static?)
+- Instancing for spheres and cylinders
+
+- FPS monitor
+- Autorotate
+- Improve MatRenderer (reverse loop order for better cache hit)
+- Interleaved array
+- Reduce colors to UNSIGNED_BYTE * 3, not FLOAT * 4
+
+- Better packing diagram (bring back to the cell)
+
+- Fix loop
+- Stereo
+- Picker
+- Labels
+- Sequence view
+
+* DONE
+
+- Port to OpenGL ES 2.0 (almost DONE)
+- Fix BAD_ACCESS error in VBO
+    This was due to access to nVertices before initialization
+- Make everything VBO (necessary for WebGL)
+    But how much VRAM do we have?
+    Can we kill vertexBuffer, etc after uploading it to VRAM?
+
+* Supported platforms
+
+OpenGL ES 2.0 : Almost all iOS, Android 2.2-
+OpenGL ES 3.0 : iOS 7 with A7 core and higher, Android 4.3-

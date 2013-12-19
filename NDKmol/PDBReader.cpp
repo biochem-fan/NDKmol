@@ -56,7 +56,7 @@ std::string safeParseString(std::string &s, int from, int len) {
 	int lim = std::min((int)s.length(), from + len);
 
 	for (; i < lim; i++) if (s[i] != ' ') break;
-	for (i; i < lim; i++) {
+	for (; i < lim; i++) {
 		if (s[i] == ' ') break;
 		ret += s[i];
 	}

@@ -18,8 +18,8 @@
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
 #include "Renderable.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
+#include "GLES.hpp"
+#include "math.h"
 
 Renderable::Renderable() {
 	scalex = 1; scaley = 1; scalez = 1;
@@ -32,7 +32,28 @@ Renderable::Renderable() {
 	children.clear();
 }
 
+void Renderable::deleteVBO() {
+    if (vertexVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&vertexVBO);
+        vertexVBO = -1;
+    }
+    if (vertexNormalVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&vertexNormalVBO);
+        vertexNormalVBO = -1;
+    }
+    if (colorVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&colorVBO);
+        colorVBO = -1;
+    }
+    if (faceVBO != -1) {
+        glDeleteBuffers(1, (GLuint*)&faceVBO);
+        faceVBO = -1;
+    }
+}
+
 Renderable::~Renderable() {
+    deleteVBO();
+    
 	if (vertexBuffer) {
 		delete vertexBuffer;
 		vertexBuffer = NULL;
@@ -52,60 +73,132 @@ Renderable::~Renderable() {
 	for (int i = 0, lim = children.size(); i < lim; i++) {
 		if (children[i]) {
 			delete children[i];
-			children[i] = NULL;
+			children[i] = NULL;			
 		}
 	}
 }
 
 void Renderable::setMatrix() {
+#ifdef OPENGL_ES1
 	glTranslatef(posx, posy, posz);
 	glRotatef(rot, rotx, roty, rotz);
 	glScalef(scalex, scaley, scalez);
+#else
+    Mat16 tmp = translationMatrix(posx, posy, posz);
+	currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+    tmp = rotationMatrix(rot / 180 * M_PI, rotx, roty, rotz);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+    tmp = scaleMatrix(scalex, scaley, scalez);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+
+    glUniformMatrix4fv(shaderModelViewMatrix, 1, GL_FALSE, currentModelViewMatrix.m);
+    glUniformMatrix3fv(shaderNormalMatrix, 1, GL_FALSE, transposedInverseMatrix9(currentModelViewMatrix).m);
+#endif
 }
 
-//public Renderable(FloatBuffer vertices, ShortBuffer faces) {
-//	vertexBuffer = vertices;
-//	faceBuffer = faces;
-//}
-
-
 void Renderable::drawChildren() {
-//	__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering children started");
 	for (int i = 0; i < children.size(); i++) {
-//		__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering children %d/%d", i + 1, children.size());
 		children[i]->render();
 	}
-//	__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering children finished");
+}
+
+void Renderable::prepareVBO() {
+    // TODO: Implement me. We need nVertices and nFaces here.
+    GLuint vbo[4];
+	glGenBuffers(4, vbo);
+    
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float), vertexBuffer, GL_STATIC_DRAW);
+	vertexVBO = vbo[0];
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float), vertexNormalBuffer, GL_STATIC_DRAW);
+	vertexNormalVBO = vbo[1];
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
+	glBufferData (GL_ELEMENT_ARRAY_BUFFER, nFaces * sizeof(short), faceBuffer, GL_STATIC_DRAW);
+	faceVBO = vbo[2];
+	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    if (vertexColors) {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
+        glBufferData(GL_ARRAY_BUFFER, nVertices * sizeof(float) * 4 / 3, colorBuffer, GL_STATIC_DRAW);
+        colorVBO = vbo[3];
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 }
 
 void Renderable::render() {
+    if (vertexVBO == -1) {
+#ifdef OPENGL_ES1
+#else
+        prepareVBO();
+#endif
+     }
+    
 	glPushMatrix();
-	setMatrix();
+    setMatrix();
 	drawChildren();
 
 	if (vertexColors && colorBuffer != NULL) {
+#ifdef OPENGL_ES1
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_FLOAT, 0, colorBuffer);
+#else
+		glEnableVertexAttribArray(shaderVertexColor);
+        glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+        glVertexAttribPointer(shaderVertexColor, 4, GL_FLOAT, GL_FALSE, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 	} else {
+#ifdef OPENGL_ES1
 		glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+#else
+		glDisableVertexAttribArray(shaderVertexColor);
+        glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+#endif
 	}
 	if (nFaces > 0) {
-//		__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering self. nFaces = %d", nFaces);
-		glEnableClientState(GL_VERTEX_ARRAY);
+#ifdef OPENGL_ES1
+        glEnableClientState(GL_VERTEX_ARRAY);
 		glVertexPointer(3, GL_FLOAT, 0, vertexBuffer);
+#else
+        glEnableVertexAttribArray(shaderVertexPosition);
+    	glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+        glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    	glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 		if (vertexNormalBuffer != NULL) {
-//			__android_log_print(ANDROID_LOG_DEBUG,"Renderable","vertexNormal enabled");
+#ifdef OPENGL_ES1
 			glEnableClientState(GL_NORMAL_ARRAY);
 			glNormalPointer(GL_FLOAT, 0, vertexNormalBuffer);
+#else
+            glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
+            glEnableVertexAttribArray(shaderVertexNormal);
+            glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 		}
+		
+#ifdef OPENGL_ES1
 		glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, faceBuffer);
 		glDisableClientState(GL_VERTEX_ARRAY);
 		glDisableClientState(GL_NORMAL_ARRAY);
+#else
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+        glDrawElements(GL_TRIANGLES, nFaces, GL_UNSIGNED_SHORT, 0);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
 	}
+
 	if (vertexColors) {
+#ifdef OPENGL_ES1
 		glDisableClientState(GL_COLOR_ARRAY);
+#else
+		glDisableVertexAttribArray(shaderVertexColor);
+#endif
 	}
 	glPopMatrix();
-//	__android_log_print(ANDROID_LOG_DEBUG,"Renderable","rendering finished");
 }
-

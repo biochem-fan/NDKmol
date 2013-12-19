@@ -22,7 +22,8 @@
 
 float *CylinderGeometry::vertexBuffer = NULL;
 float *CylinderGeometry::vertexNormalBuffer = NULL;
-short *CylinderGeometry::faceBuffer = NULL;
+unsigned short *CylinderGeometry::faceBuffer = NULL;
+
 int CylinderGeometry::nVertices, CylinderGeometry::nFaces;
 
 float *CylinderGeometry::getVertexBuffer() {
@@ -31,13 +32,23 @@ float *CylinderGeometry::getVertexBuffer() {
 }
 
 float *CylinderGeometry::getVertexNormalBuffer() {
-	if (!vertexNormalBuffer) prepare(cylinderQuality);
+	if (!vertexBuffer) prepare(cylinderQuality);
 	return vertexNormalBuffer;
 }
 
-short *CylinderGeometry::getFaceBuffer() {
-	if (!faceBuffer) prepare(cylinderQuality);
+unsigned short *CylinderGeometry::getFaceBuffer() {
+	if (!vertexBuffer) prepare(cylinderQuality);
 	return faceBuffer;
+}
+
+int CylinderGeometry::getnVertices() {
+    if (!vertexBuffer) prepare(cylinderQuality);
+	return nVertices;
+}
+
+int CylinderGeometry::getnFaces() {
+    if (!vertexBuffer) prepare(cylinderQuality);
+	return nFaces;
 }
 
 void CylinderGeometry::prepare(int div) {
@@ -68,7 +79,7 @@ void CylinderGeometry::prepare(int div) {
 
 
 	nFaces = div * 2;
-	faceBuffer = new short[nFaces * 3];
+	faceBuffer = new unsigned short[nFaces * 3];
 	offset = 0;
 	for (int i = 0; i < div; i++) {
 		faceBuffer[6 * i] = (short) (offset);

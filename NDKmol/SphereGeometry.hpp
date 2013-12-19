@@ -27,12 +27,14 @@ private:
 	static unsigned short *faceBuffer;
 	static const int sphereQuality = 12;
 	static void prepare(int div1, int div2);
-
+	static int nVertices, nFaces;
+    
 public:
 	static float *getVertexBuffer();
 	static float *getVertexNormalBuffer();
 	unsigned static short *getFaceBuffer();
-	static int nVertices, nFaces;
+    static int getnVertices();
+    static int getnFaces();
 };
 
 #endif

@@ -19,8 +19,11 @@
 
 #include "VBOSphere.hpp"
 #include "SphereGeometry.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
+#include "GLES.hpp"
+
+// These fields overrides the same-named fields in Renderable.
+// Renderable::destroyVBOs refers to those fields, so that 'real' VBO are not destroyed.
+// TODO: Currently, there is no way to actually destroy VBOs.
 
 int VBOSphere::faceVBO = -1, VBOSphere::vertexVBO = -1, VBOSphere::vertexNormalVBO = -1, VBOSphere::faceCount = -1;
 
@@ -35,48 +38,67 @@ VBOSphere::VBOSphere(float x, float y, float z, float radius, Color c) {
 void VBOSphere::prepareVBO() {
 	GLuint vbo[3];
 	glGenBuffers(3, vbo);
-
+    
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::nVertices * 3 * 4, SphereGeometry::getVertexBuffer(), GL_STATIC_DRAW);
+    
+	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::getnVertices() * 3 * 4, SphereGeometry::getVertexBuffer(), GL_STATIC_DRAW);
 	vertexVBO = vbo[0];
-
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::nVertices * 3 * 4, SphereGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, SphereGeometry::getnVertices() * 3 * 4, SphereGeometry::getVertexNormalBuffer(), GL_STATIC_DRAW);
 	vertexNormalVBO = vbo[1];
-
-	faceCount = SphereGeometry::nFaces;
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+	faceCount = SphereGeometry::getnFaces();
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, vbo[2]);
 	glBufferData (GL_ELEMENT_ARRAY_BUFFER, faceCount * 3 * 2, SphereGeometry::getFaceBuffer(), GL_STATIC_DRAW);
 	faceVBO = vbo[2];
-
-	__android_log_print(ANDROID_LOG_DEBUG,"VBOSphere", "prepared VBOs: vertex %d normal %d face %d", vertexVBO, vertexNormalVBO, faceVBO);
-
-	// unbind -- IMPORTANT! otherwise, GL will crash!
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void VBOSphere::render() {
+    if (vertexVBO == -1) {
+        prepareVBO();
+    }
 	glPushMatrix();
 	setMatrix();
-
+    
+#ifdef OPENGL_ES1
 	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+	glDisableClientState(GL_COLOR_ARRAY);
+#else
+    glDisableVertexAttribArray(shaderVertexColor);
+    glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
+#endif
 
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+#ifdef OPENGL_ES1
+	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(3, GL_FLOAT, 0, 0);
+#else
+	glEnableVertexAttribArray(shaderVertexPosition);
+    glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+#endif
 
-	glEnableClientState(GL_NORMAL_ARRAY);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexNormalVBO);
+#ifdef OPENGL_ES1
+	glEnableClientState(GL_NORMAL_ARRAY);
 	glNormalPointer(GL_FLOAT, 0, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
-	glDrawElements(GL_TRIANGLES, VBOSphere::faceCount * 3, GL_UNSIGNED_SHORT, 0);
+#else
+	glEnableVertexAttribArray(shaderVertexNormal);
+    glVertexAttribPointer(shaderVertexNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+#endif
+    
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, faceVBO);
+	glDrawElements(GL_TRIANGLES, faceCount * 3, GL_UNSIGNED_SHORT, 0);
 
+#ifdef OPENGL_ES1
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);
-
+#endif
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer (GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glPopMatrix();
 }

@@ -19,13 +19,13 @@
 
 #include "Atom.h"
 #include "NdkView.hpp"
-#include <GLES/gl.h>
-#include <android/log.h>
 #include <cmath>
 #include <vector>
 #include <set>
 #include <string>
+#include <cstdlib>
 #include <map>
+#include "GLES.hpp"
 #include "Color.hpp"
 #include "PDBReader.hpp"
 #include "SDFReader.hpp"
@@ -34,7 +34,6 @@
 #include "RibbonStrip.hpp"
 #include "Line.hpp"
 #include "Geometry.hpp"
-//#include "PLYGeometry.hpp"
 #include "Renderable.hpp"
 #include "MatRenderable.hpp"
 #include "VBOSphere.hpp"
@@ -42,6 +41,10 @@
 #include "ChemDatabase.hpp"
 #include "Protein.hpp"
 #include "View.hpp"
+#ifdef __ANDROID__
+#include "NdkView.h"
+#include <android/log.h>
+#endif
 
 #define DIV 1
 
@@ -51,9 +54,9 @@ Renderable *scene = NULL;
 
 float sphereRadius = 1.5f;
 float cylinderRadius = 0.2f;
-float lineWidth = 0.5f;
+float lineWidth = 2.0f;
 float curveWidth = 2.0f;
-float thickness = 0.4f;
+float thickness = 0.6;
 
 float* getExtent(std::vector<int> &atomlist);
 std::vector<int> getAll();
@@ -87,26 +90,82 @@ void drawNucleicAcidCartoon(Renderable &scene, std::vector<int> &atomlist, int d
 void drawNucleicAcidStrand(Renderable &scene, std::vector<int> &atomlist, int num, int div, bool fill, float thickness);
 void drawNucleicAcidLadder(Renderable &scene, std::vector<int> &atomlist);
 
+#ifdef __ANDROID_API__
 // onSurfaceChanged
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLResize
 (JNIEnv *env, jclass clasz, jint width, jint height) {
-	__android_log_print(ANDROID_LOG_DEBUG, "NdkView", "resize");
-
-	VBOSphere::prepareVBO();
-	VBOCylinder::prepareVBO();
+	nativeGLResize();
 }
 
 // onDrawFrame
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLRender
 (JNIEnv *env, jclass clasz) {
-	if (scene != NULL) scene->render();
+	nativeGLRender();
 }
 
 // loadProtein
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadProtein
 (JNIEnv *env, jclass clasz, jstring path) {
 	const char *filename = env->GetStringUTFChars(path, NULL);
-	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","opening %s", filename);
+
+	nativeLoadProtein(filename);
+
+	env->ReleaseStringUTFChars(path, filename);
+}
+
+// loadSDF
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
+(JNIEnv *env, jclass clasz, jstring path) {
+	const char *filename = env->GetStringUTFChars(path, NULL);
+	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","opening SDFFile %s", filename);
+
+	nativeLoadSDF(filename);
+
+	env->ReleaseStringUTFChars(path, filename);
+}
+
+// onSurfaceCreated
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLInit
+(JNIEnv *env, jclass clasz) {
+	nativeGLInit();
+}
+
+// prepareScene
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
+(JNIEnv *env, jclass clasz, jint proteinMode, jint hetatmMode, jint symmetryMode, jint colorMode,
+		jboolean showSidechain, jboolean showUnitcell, jint nucleicAcidMode, jboolean showSolvents,
+		jboolean doNotSmoothen, jboolean symopHetatms) {
+	buildScene(proteinMode, hetatmMode, symmetryMode, colorMode, showSidechain, showUnitcell,
+				nucleicAcidMode, showSolvents, false/*resetView*/, doNotSmoothen, symopHetatms);
+}
+
+JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZoom
+(JNIEnv *env, jclass clasz, jint symmetryMode) {
+	jfloatArray ret = env->NewFloatArray(7);
+
+	if (protein == NULL) return ret;
+
+	jboolean dummy;
+	jfloat *array = env->GetFloatArrayElements(ret, &dummy);
+
+	float slabNear, slabFar, cameraZ, objX, objY, objZ;
+
+	nativeAdjustZoom(array, array + 1, array + 2, array + 3, array + 4, array + 5, (symmetryMode ==  SYMOP_BIOMT));
+
+	array[6] =100; // maxD; // FIXME: Is this used??
+	env->ReleaseFloatArrayElements(ret, array, 0);
+	return ret;
+}
+#endif
+
+void nativeGLResize () {
+}
+
+void nativeGLRender() {
+	if (scene != NULL) scene->render();
+}
+
+void nativeLoadProtein(const char* filename) {
 	PDBReader pdb;
 	if (scene) {
 		delete scene;
@@ -118,15 +177,9 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadProtein
 	}
 	protein = pdb.parsePDB(filename);
 	atoms = protein->atoms;
-
-	env->ReleaseStringUTFChars(path, filename);
 }
 
-// loadSDF
-JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
-(JNIEnv *env, jclass clasz, jstring path) {
-	const char *filename = env->GetStringUTFChars(path, NULL);
-	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","opening SDFFile %s", filename);
+void nativeLoadSDF(const char* filename) {
 	SDFReader sdf;
 	if (scene) {
 		delete scene;
@@ -138,69 +191,54 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
 	}
 	protein = sdf.parseSDF(filename);
 	atoms = protein->atoms;
-
-	env->ReleaseStringUTFChars(path, filename);
 }
 
-JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZoom
-(JNIEnv *env, jclass clasz, jint symmetryMode) {
-	// FIXME: What happens when protein is not loaded.
-	jfloatArray ret = env->NewFloatArray(7);
-	if (protein == NULL) return ret;
-
-	jboolean dummy;
-	jfloat *array = env->GetFloatArrayElements(ret, &dummy);
-
+void nativeAdjustZoom(float *objX, float *objY, float *objZ, float *cameraZ, float *slabNear, float *slabFar, bool bioMT) {
+	if (protein == NULL) return;
+	
 	int nBiomt = protein->biomtMatrices.size();
 	std::vector<int> all = getAll();
-	if (symmetryMode ==  SYMOP_BIOMT && nBiomt > 0) all = getChain(all, protein->biomtChains);
+	if (bioMT && nBiomt > 0) all = getChain(all, protein->biomtChains);
 	float *extent = getExtent(all);
-	float slabNear, slabFar, cameraZ, objX, objY, objZ, FOV = 20;
-
-	objX = (extent[0] + extent[3]) / 2;
-	objY = (extent[1] + extent[4]) / 2;
-	objZ = (extent[2] + extent[5]) / 2;
-
-	if (symmetryMode ==  SYMOP_BIOMT && nBiomt > 0) {
+//	printf("%d [%f, %f, %f], [%f, %f, %f]\n", nBiomt, extent[0], extent[1], extent[2], extent[3], extent[4], extent[5]);
+	
+	*objX = (extent[0] + extent[3]) / 2;
+	*objY = (extent[1] + extent[4]) / 2;
+	*objZ = (extent[2] + extent[5]) / 2;
+//	printf("center %f, %f, %f\n", *objX, *objY, *objZ);
+	
+	if (bioMT && nBiomt > 0) {
 		Mat16 averagedMat = {};
 		for (std::map<int, Mat16>::iterator it = protein->biomtMatrices.begin(); it != protein->biomtMatrices.end(); ++it) {
 			Mat16 mat = it->second;
 			for (int i = 0; i < 16; i++) averagedMat.m[i] += mat.m[i];
 		}
 		for (int i = 0; i < 16; i++) averagedMat.m[i] /= nBiomt;
-
-		Vector3 center(objX, objY, objZ);
+		Vector3 center(*objX, *objY, *objZ);
 		center.applyMat16(averagedMat);
-		objX = center.x; objY = center.y; objZ = center.z;
+		*objX = center.x; *objY = center.y; *objZ = center.z;
+//		printf("center %f, %f, %f\n", *objX, *objY, *objZ);
 	}
-	objX *= -1; objY *= -1; objZ *= -1;
-
+	*objX *= -1; *objY *= -1; *objZ *= -1; 
+	
+	float FOV = 20;
+	
 	float x = extent[3] - extent[0], y = extent[4] - extent[1], z = extent[5] - extent[2];
 	float maxD = (float)std::sqrt(x * x + y * y + z * z);
 	if (maxD < 25) maxD = 25;
-
-	slabNear = -maxD / 1.9f;
-	slabFar = maxD / 3;
-	cameraZ = -(float)(maxD * 0.5 / std::tan(M_PI / 180.0 * FOV / 2));
-
-	*(array++) = objX; *(array++) = objY; *(array++) = objZ;
-	*(array++) = cameraZ; *(array++) = slabNear; *(array++) = slabFar;
-	*(array++) = maxD;
+	if (nBiomt > 20) maxD = 800;
+	
+	*slabNear = -maxD / 1.9f;
+	*slabFar = maxD / 3;
+	*cameraZ = -(float)(maxD * 0.5 / std::tan(M_PI / 180.0 * FOV / 2));
+	
 	delete [] extent;
-	env->ReleaseFloatArrayElements(ret, array, 0);
-	return ret;
 }
-/*
-#include "CommonPara.h"
-#include "ParsePDB.h"
-#include "ProteinSurface.h"
- */
+
 
 // prepareScene
-JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
-(JNIEnv *env, jclass clasz, jint proteinMode, jint hetatmMode, jint symmetryMode, jint colorMode,
-		jboolean showSidechain, jboolean showUnitcell, jint nucleicAcidMode, jboolean showSolvents,
-		jboolean doNotSmoothen, jboolean symopHetatms) {
+void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode, bool showSidechain, bool showUnitcell,
+				int nucleicAcidMode, bool showSolvents, bool resetView, bool doNotSmoothen, bool symopHetatms) {
 	if (scene != NULL) {
 		delete scene;
 		scene = NULL;
@@ -305,24 +343,20 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
 	}
 }
 
-// onSurfaceCreated
-JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLInit
-(JNIEnv *env, jclass clasz) {
-	__android_log_print(ANDROID_LOG_DEBUG,"NdkView","init");
-
-	VBOSphere::prepareVBO(); // FIXME: Why is it necessary here when resize is also called?
-	VBOCylinder::prepareVBO();
-
+void nativeGLInit() {
+//	VBOSphere::prepareVBO();
+//	VBOCylinder::prepareVBO();
+	
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
 	glShadeModel(GL_SMOOTH);
-	//	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//		glEnable(GL_LINE_SMOOTH); // FIXME: Check if this is working.
+	glEnable(GL_LINE_SMOOTH); // FIXME: Check if this is working.
 	glLightModelx(GL_LIGHT_MODEL_TWO_SIDE, 1); // double sided
-	glEnable(GL_COLOR_MATERIAL); // glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE) ?
+	glEnable(GL_COLOR_MATERIAL);
 	glDepthFunc(GL_LEQUAL);
 	glDisable(GL_DITHER);
 	glEnable(GL_LIGHTING);
@@ -334,7 +368,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLInit
 	float f3[] = {0.8f, 0.8f, 0.8f, 1};
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, f3);
 	glEnable(GL_LIGHT1);
-	//		glLightfv(GL_LIGHT0, GL_AMBIENT, Geometry.getFloatBuffer(new float[] {0.4f, 0.4f, 0.4f, 1}));
+
 	float f4[] = {0, 0, -1, 0};
 	glLightfv(GL_LIGHT1, GL_POSITION, f4);
 	float f5[] = {0.1f, 0.1f, 0.1f, 1};
@@ -343,19 +377,19 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLInit
 	glLightfv(GL_LIGHT1, GL_SPECULAR, f5);
 	//	glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION, {0, 0, 1}));
 
-	/*
+#ifndef __ANDROID_API__
 	glEnable(GL_FOG);
 	glFogf(GL_FOG_MODE, GL_LINEAR); // EXP, EXP2 is not supported?
 	float f6[] = {0, 0, 0, 1};
 	glFogfv(GL_FOG_COLOR, f6);
 	glFogf(GL_FOG_DENSITY, 0.3f);
-	//		gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE); */
+	gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE);
+#endif
 }
 
 float* getExtent(std::vector<int> &atomlist) {
 	float minx = 9999, miny = 9999, minz = 9999;
 	float maxx = -9999, maxy = -9999, maxz = -9999;
-
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid) continue;
@@ -368,7 +402,7 @@ float* getExtent(std::vector<int> &atomlist) {
 		if (atom->z > maxz) maxz = atom->z;
 	}
 
-	float *ret = new float[6];
+	float *ret = (float*)malloc(sizeof(float) * 6);
 	ret[0] = minx; ret[1] = miny; ret[2] = minz; ret[3] = maxx; ret[4] = maxy; ret[5] = maxz;
 
 	return ret;
@@ -469,7 +503,6 @@ void colorByAtom(std::vector<int> &atomlist, std::map<std::string, unsigned int>
 		} else {
 			atom->color = ChemDatabase::getColor(atom->elem);
 		}
-		//		__android_log_print(ANDROID_LOG_DEBUG,"CbyA","%d %s colored %f %f %f", atom->serial, atom->elem.c_str(), atom->color.r, atom->color.g, atom->color.b);
 	}
 }
 
@@ -511,20 +544,20 @@ void colorChainbow(std::vector<int> &atomlist) {
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid) continue;
-
+		
 		if (atom->atom != "CA" || atom->hetflag) continue;
 		cnt++;
 	}
-
+	
 	int total = cnt;
 	cnt = 0;
-
+	
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid) continue;
-
+		
 		if (atom->atom != "CA" || atom->hetflag) continue;
-
+		
 		atom->color.setHSV((float)240 / 360 * (total - cnt) / total, 1, 0.9f);
 		cnt++;
 	}
@@ -536,7 +569,7 @@ void colorByBFactor(std::vector<int> &atomlist) {
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid || atom->hetflag) continue;
-
+		
 		if (atom->atom == "CA" || atom->atom == "O3'") {
 			if (minB > atom->b) minB = atom->b;
 			if (maxB < atom->b) maxB = atom->b;
@@ -599,11 +632,11 @@ void drawMainchainCurve(Renderable &scene, std::vector<int> &atomlist, float cur
 
 	std::string currentChain = "A";
 	int currentResi = -1;
-
+	
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid) continue;
-
+		
 		if ((atom->atom == atomName) && !atom->hetflag) {
 			if (currentChain != atom->chain || currentResi + 1 != atom->resi) {
 				scene.children.push_back(new SmoothCurve(points, colors, curveWidth, DIV));
@@ -623,14 +656,12 @@ void drawMainchainTube(Renderable &scene, std::vector<int> &atomlist, std::strin
 	std::vector<Vector3> points;
 	std::vector<Color> colors;
 	std::vector<float> radii;
-
 	std::string currentChain = "A";
 	int currentResi = -1;
-
+	
 	for (int i = 0, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid) continue;
-
 		if ((atom->atom == atomName) && !atom->hetflag) {
 			if (currentChain != atom->chain || currentResi + 1 != atom->resi) {
 				scene.children.push_back(new SmoothTube(points, colors, radii));
@@ -756,7 +787,7 @@ void drawBondsAsLineSub(std::vector<Vector3> &points, std::vector<Color> &colors
 			dot = Vector3::dot(tmp, axis);
 			dx = tmp.x - axis.x * dot; dy = tmp.y - axis.y * dot; dz = tmp.z - axis.z * dot;
 		}
-		if (found == NULL || std::abs(dot - 1) < 0.001 || std::abs(dot + 1) < 0.001) {
+		if (found == NULL || std::abs(dot - 1) < 0.001) {
 			if (axis.x < 0.01 && axis.y < 0.01) {
 				dx = 0; dy = - axis.z; dz = axis.y;
 			} else {
@@ -862,7 +893,7 @@ void drawNucleicAcidStrand(Renderable &scene, std::vector<int> &atomlist, int nu
 	for (int i = 1, lim = atomlist.size(); i < lim; i++) {
 		Atom *atom = atoms + atomlist[i];
 		if (!atom->valid || atom->hetflag) continue;
-
+		
 		if ((atom->atom == "O3'" || atom->atom == "OP2") && !atom->hetflag) {
 			if (atom->atom == "O3'") {
 				if (atom->chain != currentChain || currentResi + 1 != atom->resi) {
@@ -1076,11 +1107,11 @@ void drawSymmetryMates(Renderable &scene, Renderable *asu, std::map<int, Mat16> 
 	MatRenderable *symmetryMate = new MatRenderable();
 	symmetryMate->children.push_back(asu);
 	scene.children.push_back(symmetryMate);
-
+	
 	for (std::map<int, Mat16>::iterator it = biomtMatrices.begin(); it != biomtMatrices.end(); ++it) {
 		Mat16 mat = it->second;
 //		if (isIdentity(mat)) continue;
-
+		
 		symmetryMate->addMatrix(mat);
 	}
 }
@@ -1101,7 +1132,6 @@ void drawSymmetryMatesWithTranslation(Renderable &scene, Renderable *asu, std::m
 					translated.m[7] += protein->ay * a + protein->by * b + protein->cy * c;
 					translated.m[11] += protein->az * a + protein->bz * b + protein->cz * c;
 //					if (isIdentity(translated)) continue;
-
 					symmetryMate->addMatrix(translated);
 				}
 			}
@@ -1112,7 +1142,6 @@ void drawSymmetryMatesWithTranslation(Renderable &scene, Renderable *asu, std::m
 
 void drawUnitcell(Renderable &scene, float width) {
 	if (protein->a == 0) return;
-
 	float vertices[][3] = {{0, 0, 0},
 		{protein->ax, protein->ay, protein->az},
 		{protein->bx, protein->by, protein->bz},

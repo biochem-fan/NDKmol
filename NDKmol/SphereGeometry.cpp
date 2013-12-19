@@ -31,13 +31,24 @@ float *SphereGeometry::getVertexBuffer() {
 }
 
 float *SphereGeometry::getVertexNormalBuffer() {
-	if (!vertexNormalBuffer) prepare(sphereQuality, sphereQuality);
+	if (!vertexBuffer) prepare(sphereQuality, sphereQuality);
 	return vertexNormalBuffer;
 }
 
 unsigned short *SphereGeometry::getFaceBuffer() {
-	if (!faceBuffer) prepare(sphereQuality, sphereQuality);
+	if (!vertexBuffer) prepare(sphereQuality, sphereQuality);
 	return faceBuffer;
+}
+
+int SphereGeometry::getnVertices() {
+    if (!vertexBuffer) prepare(sphereQuality, sphereQuality);
+
+	return nVertices;
+}
+
+int SphereGeometry::getnFaces() {
+    if (!vertexBuffer) prepare(sphereQuality, sphereQuality);
+	return nFaces;
 }
 
 void SphereGeometry::prepare(int div1, int div2) {

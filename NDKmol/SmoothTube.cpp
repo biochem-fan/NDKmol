@@ -25,7 +25,6 @@
 SmoothTube::SmoothTube(std::vector<Vector3> &_points, std::vector<Color> &colors, std::vector<float> &radii)
  : Renderable() {
 	if (_points.size() < 2) return;
-//	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","nPoints %d", _points.size());
 
 	int circleDiv = 6, axisDiv = 3;
 
@@ -115,6 +114,7 @@ SmoothTube::SmoothTube(std::vector<Vector3> &_points, std::vector<Color> &colors
 	vertexBuffer = vertices;
 	colorBuffer = colorVectorToFloatArray(colors, axisDiv * circleDiv);
 	nFaces = (nDividedPoints - 1) * circleDiv * 2 * 3;
+    nVertices = nDividedPoints * circleDiv * 3;
 	vertexColors = true;
 	faceBuffer = faces;
 	vertexNormalBuffer = normals;

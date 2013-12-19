@@ -71,9 +71,44 @@ A PDB file (PDBID: 2POR) is included as an example.
  "Structure of porin refined at 1.8 A resolution"
    Weiss, M.S.,  Schulz, G.E., J.Mol.Biol. 227: 493-509 (1992)
 
+== License ==
+
+ (C) Copyright biochem_fan, 2011-2013
+
+ LGPL version 3.
+ Briefly, you don't have to open-source your code but if you
+ modified my code, please open-source the modification so that I can merge it.
+ Also please acknowledge use of my code in e.g. "About" dialog.
+
+ If LGPL is not suitable for your purpose, just tell me. 
+ I will consider another license for you.
+ 
 == Contact ==
 
 Project website is located at http://webglmol.sourceforge.jp/
 
 Comments and suggestions are welcome at http://sourceforge.jp/projects/webglmol/forums/ or 
 biochem_fan@users.sourceforge.jp 
+
+== iOS support ==
+
+iOS port is being merged to this repository, but not completed yet.
+
+How to use:
+
+ single-finger drag - rotation
+ double-finger drag(pan) - translation
+ double-finger pinch - zoom
+ single-finger long press - open "view settings" panel
+
+Lacking Features:
+
+ File browser and PDB/PubChem searcher is not implemented.
+
+How to integrate to your code:
+
+ "MolecularViewerViewController.mm" is the main view controller.
+ You can invoke this controller from your code.
+
+ To change models, save PDB file in the resource directory and
+ call "loadMolecule" method in MolecularViewerViewController.mm
