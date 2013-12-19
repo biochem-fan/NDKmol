@@ -3,19 +3,25 @@
 - Fix lighting
 - Better matrix handling
 - Handle OpenGL context lost
-- Reduce colors to UNSIGNED_BYTE * 3, not FLOAT * 4
+
 - Refactor VBOSphere & VBOCylinder
 - Refactor Sphere/Cylinder Geometory
    (avoid static?)
 - Instancing for spheres and cylinders
+
 - FPS monitor
 - Autorotate
-- Interlaved array
 - Improve MatRenderer (reverse loop order for better cache hit)
+- Interleaved array
+- Reduce colors to UNSIGNED_BYTE * 3, not FLOAT * 4
+
 - Better packing diagram (bring back to the cell)
+
+- Fix loop
 - Stereo
 - Picker
 - Labels
+- Sequence view
 
 * DONE
 
