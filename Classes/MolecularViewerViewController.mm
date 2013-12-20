@@ -56,7 +56,11 @@
 - (void)awakeFromNib
 {	
 	// GL context creation
+#ifdef OPENGL_ES1
+    EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+#else
     EAGLContext *aContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+#endif
     if (!aContext)
         NSLog(@"Failed to create ES context");
     else if (![EAGLContext setCurrentContext:aContext])
@@ -75,6 +79,7 @@
     [(MolecularView *)self.view setFramebuffer];
 	
 
+#ifndef OPENGL_ES1
     // Initialize Shader
 	shaderProgram = CreateShader(vertexShader, fragmentShader);
     
@@ -89,6 +94,7 @@
 	} else {
         printf("Failed to create shader\n");
     }
+#endif
     
     // Animation. I don't know about them.
 	animating = FALSE;
@@ -346,10 +352,13 @@ static void calcFps() {
 	ymin = -ymax;
 	xmin = ymin * aspect;
 	xmax = ymax * aspect;
+#ifdef OPENGL_ES1
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+#else
 	Mat16 projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-//	glMatrixMode(GL_PROJECTION);
-//	glLoadIdentity();
-//	glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+#endif
     
     glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
 	glFogf(GL_FOG_END, zFar);
@@ -362,15 +371,17 @@ static void calcFps() {
     tmp = translationMatrix(objX, objY, objZ);
     currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
     
+#ifdef OPENGL_ES1
+    glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glTranslatef(0, 0, cameraZ);
+	glRotatef(180 * rotationQ.getAngle() / M_PI, ax, ay, az);
+	glTranslatef(objX, objY, objZ);
+#else
     glUseProgram(shaderProgram);
     glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
+#endif
     
-//  glMatrixMode(GL_MODELVIEW);
-//	glLoadIdentity();
-//	glTranslatef(0, 0, cameraZ);
-//	glRotatef(180 * rotationQ.getAngle() / M_PI, ax, ay, az);
-//	glTranslatef(objX, objY, objZ);
-
     nativeGLRender();
     
     [(MolecularView *)self.view presentFramebuffer];

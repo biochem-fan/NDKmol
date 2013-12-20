@@ -24,9 +24,9 @@
 #include <android/log.h>
 #define OPENGL_ES1
 #include <GLES/gl.h>
-#else // iOS OpenGL 2.0
-#define OPENGL_ES2
-#include <OpenGLES/ES2/gl.h> 
+#else // iOS
+#define OPENGL_ES1
+#include <OpenGLES/ES1/gl.h>
 #endif
 
 #include "Matrix.hpp"
@@ -38,10 +38,11 @@ extern unsigned int shaderModelViewMatrix, shaderProjectionMatrix, shaderNormalM
 extern unsigned int shaderVertexColor;
 extern Mat16 currentModelViewMatrix;
 
+#ifndef OPENGL_ES1
 extern const GLchar *vertexShader, *fragmentShader;
-
 GLuint CreateShader(const GLchar *vs, const GLchar *fs);
 void glPushMatrix();
 void glPopMatrix();
+#endif
 
 #endif

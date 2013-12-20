@@ -28,6 +28,7 @@ unsigned int shaderProgram = 0, shaderVertexPosition = 0, shaderVertexNormal = 0
 unsigned int shaderModelViewMatrix = 0, shaderProjectionMatrix = 0, shaderNormalMatrix = 0;
 unsigned int shaderObjColor = 0, shaderUseVertexColor = 0, shaderVertexColor = 0;
 
+#ifndef OPENGL_ES1
 const GLchar *vertexShader =
 "attribute vec4 vertexPosition; \n" // INPUT is vec3; the 4th element is automatically set to 1
 "attribute vec4 vertexNormal; \n"
@@ -71,6 +72,7 @@ void glPopMatrix() {
     currentModelViewMatrix = glStack.top();
     glStack.pop();
 }
+#endif
 
 #ifndef OPENGL_ES1
 GLuint CreateShader(const GLchar *vs, const GLchar *fs) {

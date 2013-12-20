@@ -1,8 +1,12 @@
 * TODO
 
 - !! In real device, changing symmetry mode (packing to others) leads to blank screen
+- !! In Android, Sphere/Sticks are not displayed, MatRenderer is broken
 
-- Fix lighting
+- Line does not use VBO yet
+
+- Fix lighting (in ES2)
+- Fix lighting (in ES1; VBOSphere doesn't preserve lighting settings?)
 - Better matrix handling
 - Handle OpenGL context lost
 

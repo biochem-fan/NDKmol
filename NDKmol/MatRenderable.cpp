@@ -63,6 +63,7 @@ void MatRenderable::render() {
 	for (int i = 0, lim = matrices.size(); i < lim; i++) {
 		glPushMatrix(); // FIXME: crash! <- What??
 #ifdef OPENGL_ES1
+//		__android_log_print(ANDROID_LOG_DEBUG, "NdkView","MatRenderable rendering %d/%d", i, lim);
 		glMultMatrixf(matrices[i].m);
 #else
         currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, matrices[i]);

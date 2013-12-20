@@ -90,7 +90,7 @@ void drawNucleicAcidCartoon(Renderable &scene, std::vector<int> &atomlist, int d
 void drawNucleicAcidStrand(Renderable &scene, std::vector<int> &atomlist, int num, int div, bool fill, float thickness);
 void drawNucleicAcidLadder(Renderable &scene, std::vector<int> &atomlist);
 
-#ifdef __ANDROID_API__
+#ifdef __ANDROID__
 // onSurfaceChanged
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLResize
 (JNIEnv *env, jclass clasz, jint width, jint height) {
@@ -381,13 +381,16 @@ void nativeGLInit() {
 	glLightfv(GL_LIGHT1, GL_SPECULAR, f5);
 	//	glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION, {0, 0, 1}));
 
-#ifndef __ANDROID_API__
+#ifndef __ANDROID__
+#ifdef OPENGL_ES1
 	glEnable(GL_FOG);
 	glFogf(GL_FOG_MODE, GL_LINEAR); // EXP, EXP2 is not supported?
 	float f6[] = {0, 0, 0, 1};
 	glFogfv(GL_FOG_COLOR, f6);
 	glFogf(GL_FOG_DENSITY, 0.3f);
-	gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE);
+	glHint(GL_FOG_HINT, GL_DONT_CARE);
+#endif
+    
 #endif
 #endif
 }
