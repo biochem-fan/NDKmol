@@ -166,7 +166,6 @@
             [self createFramebuffer];
 //			NSLog(@"nativeGLInit called");
 			nativeGLInit();
-			nativeGLInit(); // Magic. I don't know why, but we have to call this twice.
 			glFlush();
 		}
         

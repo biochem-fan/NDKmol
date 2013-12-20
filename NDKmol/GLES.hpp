@@ -23,10 +23,22 @@
 #ifdef __ANDROID__
 #include <android/log.h>
 #define OPENGL_ES1
+#endif
+
+#ifdef OPENGL_ES1
+#ifdef __ANDROID__
 #include <GLES/gl.h>
-#else // iOS
-#define OPENGL_ES1
+#else
 #include <OpenGLES/ES1/gl.h>
+#endif
+
+#else // OPENGL_ES2
+
+#ifdef __ANROID__
+#else
+#include <OpenGLES/ES2/gl.h>
+#endif
+
 #endif
 
 #include "Matrix.hpp"
