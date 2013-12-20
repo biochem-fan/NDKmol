@@ -20,6 +20,9 @@
 #ifndef GLES_INCLUDED
 #define GLES_INCLUDED
 
+// debug
+#define OPENGL_ES1
+
 #ifdef __ANDROID__
 #include <android/log.h>
 #define OPENGL_ES1

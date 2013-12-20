@@ -128,7 +128,7 @@
 	[rotationGesture release];
 	
 	// Load initial model
-	[self loadMolecule: @"3V8T.pdb"];
+	[self loadMolecule: @"initial.pdb"];
 }
 
 // TODO: Add slab UI

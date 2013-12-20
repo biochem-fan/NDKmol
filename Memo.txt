@@ -1,7 +1,6 @@
 * TODO
 
 - !! In real device, changing symmetry mode (packing to others) leads to blank screen
-- !! In Android, Sphere/Sticks are not displayed, MatRenderer is broken
 
 - Line does not use VBO yet
 
