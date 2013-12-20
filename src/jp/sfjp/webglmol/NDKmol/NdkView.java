@@ -23,8 +23,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.opengl.GLSurfaceView;
-import android.opengl.GLU;
-import android.util.Log;
 
 public class NdkView implements GLSurfaceView.Renderer  {
 	public float objX, objY, objZ;
@@ -108,11 +106,15 @@ public class NdkView implements GLSurfaceView.Renderer  {
 		gl.glViewport(0, 0, width, height);
 		
 		nativeGLResize(w, h);
+//		nativeGLInit(); // TODO: Do we need this? Do we need to re-register VBOs?
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig arg1) {
 		nativeGLInit();
-		gl.glDisable(GL10.GL_FOG);
+		
+		if (NDKmolActivity.GLES1) {
+			gl.glDisable(GL10.GL_FOG);
+		}
 	}
 	
 	public void loadPDB(String path) {

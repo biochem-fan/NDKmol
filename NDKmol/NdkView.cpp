@@ -41,9 +41,9 @@
 #include "ChemDatabase.hpp"
 #include "Protein.hpp"
 #include "View.hpp"
+#include "Debug.hpp"
 #ifdef __ANDROID__
 #include "NdkView.hpp"
-#include <android/log.h>
 #endif
 
 #define DIV 1
@@ -168,7 +168,6 @@ void nativeGLResize (int w, int h) {
 void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
                     float cameraZ, float slabNear, float slabFar) {
 	if (scene == NULL) return;
-
     glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDisable(GL_CULL_FACE);

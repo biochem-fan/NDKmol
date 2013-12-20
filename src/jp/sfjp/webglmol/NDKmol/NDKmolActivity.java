@@ -177,7 +177,7 @@ public class NDKmolActivity extends Activity {
 				dataDir = sdfolder.getAbsolutePath();
 			}				
 		}
-		Log.d("ESmol", "Data dir is " + dataDir);
+		Log.d("NDKmol", "Data dir is " + dataDir);
 		return dataDir;
 	}
 
