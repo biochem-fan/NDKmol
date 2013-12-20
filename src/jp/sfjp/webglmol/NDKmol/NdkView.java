@@ -21,8 +21,10 @@ package jp.sfjp.webglmol.NDKmol;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
+import android.util.Log;
 
 public class NdkView implements GLSurfaceView.Renderer  {
 	public float objX, objY, objZ;
@@ -46,7 +48,8 @@ public class NdkView implements GLSurfaceView.Renderer  {
 	
 	private static native void nativeGLInit();
 	private static native void nativeGLResize(int w, int h);
-	private static native void nativeGLRender();
+	private static native void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+            float cameraZ, float slabNear, float slabFar);
 	private static native void nativeLoadProtein(String path);
 	private static native void nativeLoadSDF(String path);
 	private static native void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode, boolean showSidechain, 
@@ -72,46 +75,37 @@ public class NdkView implements GLSurfaceView.Renderer  {
 	}
 
 	public void onDrawFrame(GL10 gl) {
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT|GL10.GL_DEPTH_BUFFER_BIT);
-		
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-		float cameraNear = -cameraZ + slabNear;
-		if (cameraNear < 1) cameraNear = 1;
-		float cameraFar = -cameraZ + slabFar;
-		if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
-		GLU.gluPerspective(gl, FOV, (float) width / height, cameraNear, cameraFar);
-		if (fogEnabled) {
-			gl.glEnable(GL10.GL_FOG);
-			gl.glFogf(GL10.GL_FOG_MODE, GL10.GL_LINEAR); // EXP, EXP2 is not supported?
-			gl.glFogfv(GL10.GL_FOG_COLOR, new float[] {0, 0, 0, 1}, 0);
-			gl.glFogf(GL10.GL_FOG_DENSITY, 0.3f);
-			//		gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE);
-			gl.glFogf(GL10.GL_FOG_START, cameraNear * 0.3f + cameraFar * 0.7f);
-			gl.glFogf(GL10.GL_FOG_END, cameraFar);
-		} else {
-			gl.glDisable(GL10.GL_FOG);
+		if (NDKmolActivity.GLES1) {
+			if (fogEnabled) {
+				float cameraNear = -cameraZ + slabNear;
+				if (cameraNear < 1) cameraNear = 1;
+				float cameraFar = -cameraZ + slabFar;
+				if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
+				
+				gl.glEnable(GL10.GL_FOG);
+				gl.glFogf(GL10.GL_FOG_MODE, GL10.GL_LINEAR); // EXP, EXP2 is not supported?
+				gl.glFogfv(GL10.GL_FOG_COLOR, new float[] {0, 0, 0, 1}, 0);
+				gl.glFogf(GL10.GL_FOG_DENSITY, 0.3f);
+				//		gl.glHint(GL10.GL_FOG_HINT, GL10.GL_DONT_CARE);
+				gl.glFogf(GL10.GL_FOG_START, cameraNear * 0.3f + cameraFar * 0.7f);
+				gl.glFogf(GL10.GL_FOG_END, cameraFar);
+			} else {
+				gl.glDisable(GL10.GL_FOG);
+			}
 		}
 		
-		gl.glMatrixMode(GL10.GL_MODELVIEW);
-		gl.glLoadIdentity();
-		gl.glTranslatef(0, 0, cameraZ);
-		
 		Vector3 axis = rotationQ.getAxis();
-		gl.glRotatef(180 * rotationQ.getAngle() / (float)Math.PI, axis.x, axis.y, axis.z);
-		gl.glTranslatef(objX, objY, objZ);
+		nativeGLRender(objX, objY, objZ, axis.x, axis.y, axis.z, rotationQ.getAngle(),
+                cameraZ, slabNear, slabFar);
 		
-		nativeGLRender();
-		
-		if (fogEnabled) gl.glDisable(GL10.GL_FOG);
+		if (NDKmolActivity.GLES1) {
+			if (fogEnabled) gl.glDisable(GL10.GL_FOG);
+		}
 	}
  
 	public void onSurfaceChanged(GL10 gl, int w, int h) {
 		width = w; height = h;
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL10.GL_PROJECTION);
-		gl.glLoadIdentity();
-		GLU.gluPerspective(gl, 20, (float)width / height, 1, 800);
 		
 		nativeGLResize(w, h);
 	}

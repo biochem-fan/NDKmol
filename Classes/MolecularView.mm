@@ -125,6 +125,8 @@
 			glRenderbufferStorageMultisampleAPPLE(GL_RENDERBUFFER_OES, 4, GL_DEPTH_COMPONENT16_OES, framebufferWidth , framebufferHeight);
 			glFramebufferRenderbufferOES(GL_FRAMEBUFFER_OES, GL_DEPTH_ATTACHMENT_OES, GL_RENDERBUFFER_OES, msaaDepthBuffer);
 		}
+        
+        nativeGLResize(framebufferWidth, framebufferHeight);
 	}
 }
 
@@ -164,8 +166,7 @@
         
         if (!defaultFramebuffer) {
             [self createFramebuffer];
-//			NSLog(@"nativeGLInit called");
-			nativeGLInit();
+
 			glFlush();
 		}
         

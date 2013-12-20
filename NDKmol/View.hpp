@@ -24,6 +24,8 @@ extern Atom *atoms;
 extern Protein *protein;
 extern float curveWidth;
 
+extern int width, height;
+
 // Representations
 // IMPORTANT TODO: When SettingViewController.mm is changed, these constants must be modified!
 

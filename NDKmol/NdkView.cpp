@@ -52,6 +52,8 @@ Atom *atoms = NULL;
 Protein *protein = NULL;
 Renderable *scene = NULL;
 
+int width, height;
+
 float sphereRadius = 1.5f;
 float cylinderRadius = 0.2f;
 float lineWidth = 2.0f;
@@ -94,13 +96,14 @@ void drawNucleicAcidLadder(Renderable &scene, std::vector<int> &atomlist);
 // onSurfaceChanged
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLResize
 (JNIEnv *env, jclass clasz, jint width, jint height) {
-	nativeGLResize();
+	nativeGLResize(width, height);
 }
 
 // onDrawFrame
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLRender
-(JNIEnv *env, jclass clasz) {
-	nativeGLRender();
+(JNIEnv *env, jclass clasz, jfloat objX, jfloat objY, jfloat objZ,
+		jfloat ax, jfloat ay, jfloat az, jfloat rot, jfloat cameraZ, jfloat slabNear, jfloat slabFar) {
+	nativeGLRender(objX, objY, objZ, ax, ay, az, rot, cameraZ, slabNear, slabFar);
 }
 
 // loadProtein
@@ -117,7 +120,6 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadProtein
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
 (JNIEnv *env, jclass clasz, jstring path) {
 	const char *filename = env->GetStringUTFChars(path, NULL);
-	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","opening SDFFile %s", filename);
 
 	nativeLoadSDF(filename);
 
@@ -135,7 +137,6 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
 (JNIEnv *env, jclass clasz, jint proteinMode, jint hetatmMode, jint symmetryMode, jint colorMode,
 		jboolean showSidechain, jboolean showUnitcell, jint nucleicAcidMode, jboolean showSolvents,
 		jboolean doNotSmoothen, jboolean symopHetatms) {
-	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","hetatm:%d, symMode:%d", hetatmMode, symmetryMode);
 	buildScene(proteinMode, hetatmMode, symmetryMode, colorMode, showSidechain, showUnitcell,
 				nucleicAcidMode, showSolvents, false/*resetView*/, doNotSmoothen, symopHetatms);
 }
@@ -159,11 +160,62 @@ JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZ
 }
 #endif
 
-void nativeGLResize () {
+void nativeGLResize (int w, int h) {
+    width = w;
+    height = h;
 }
 
-void nativeGLRender() {
-	if (scene != NULL) scene->render();
+void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+                    float cameraZ, float slabNear, float slabFar) {
+	if (scene == NULL) return;
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_CULL_FACE);
+    
+    float cameraNear = -cameraZ + slabNear;
+	if (cameraNear < 1) cameraNear = 1;
+	float cameraFar = -cameraZ + slabFar;
+	if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
+	double xmin, xmax, ymin, ymax, zNear = cameraNear, zFar = cameraFar,
+	aspect = width / (float)height;
+	ymax = zNear * tan(20 * M_PI / 360.0);
+	ymin = -ymax;
+	xmin = ymin * aspect;
+	xmax = ymax * aspect;
+	Mat16 projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+	
+#ifdef OPENGL_ES1
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	//glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
+	glLoadMatrixf(projectionMatrix.m);
+#else
+	
+#endif
+    
+//  glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
+//	glFogf(GL_FOG_END, zFar);
+    
+	currentModelViewMatrix = translationMatrix(0, 0, cameraZ);
+	Mat16 tmp = rotationMatrix(rot, ax, ay, az);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+    tmp = translationMatrix(objX, objY, objZ);
+    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
+
+#ifdef OPENGL_ES1
+    glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glLoadMatrixf(currentModelViewMatrix.m);
+	//glTranslatef(0, 0, cameraZ);
+	//glRotatef(180 * rot / M_PI, ax, ay, az);
+	//glTranslatef(objX, objY, objZ);
+#else
+	glUseProgram(shaderProgram);
+    glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
+#endif
+
+    scene->render();
 }
 
 void nativeLoadProtein(const char* filename) {
@@ -346,15 +398,29 @@ void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode
 }
 
 void nativeGLInit() {
-//	VBOSphere::prepareVBO();
-//	VBOCylinder::prepareVBO();
-	
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LEQUAL);
 	glDisable(GL_DITHER);
+    
+#ifndef OPENGL_ES1
+    // Initialize Shader
+	shaderProgram = CreateShader(vertexShader, fragmentShader);
+    
+	if (shaderProgram != 0) {
+	    shaderVertexPosition = glGetAttribLocation(shaderProgram, "vertexPosition");
+	    shaderVertexNormal = glGetAttribLocation(shaderProgram, "vertexNormal");
+        shaderProjectionMatrix = glGetUniformLocation(shaderProgram, "projectionMatrix");
+        shaderModelViewMatrix = glGetUniformLocation(shaderProgram, "modelviewMatrix");
+        shaderNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
+        
+        shaderVertexColor = glGetAttribLocation(shaderProgram, "vertexColor");
+	} else {
+        printf("Failed to create shader\n");
+    }
+#endif
     
 #ifdef OPENGL_ES1
 	glShadeModel(GL_SMOOTH);
@@ -379,7 +445,6 @@ void nativeGLInit() {
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, f3);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, f5);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, f5);
-	//	glPointParameterfv(GL11.GL_POINT_DISTANCE_ATTENUATION, {0, 0, 1}));
 
 #ifndef __ANDROID__
 #ifdef OPENGL_ES1

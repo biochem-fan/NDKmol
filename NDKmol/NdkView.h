@@ -50,8 +50,9 @@
 #define COLOR_POLAR 3
 #define COLOR_B_FACTOR 4
 
-extern void nativeGLResize ();
-extern void nativeGLRender();
+extern void nativeGLResize (int width, int height);
+extern void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+                           float cameraZ, float slabNear, float slabFar);
 extern void nativeLoadProtein(const char* filename);
 extern void nativeLoadSDF(const char* filename);
 extern void nativeAdjustZoom(float *, float *, float *, float *, float *, float *, bool);

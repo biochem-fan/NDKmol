@@ -26,10 +26,10 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLResize
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
  * Method:    nativeGLRender
- * Signature: ()V
+ * Signature: (FFFFFFFFFF)V
  */
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeGLRender
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat, jfloat);
 
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
@@ -50,7 +50,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
  * Method:    buildScene
- * Signature: (IIIIZZIZZ)V
+ * Signature: (IIIIZZIZZZ)V
  */
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
   (JNIEnv *, jclass, jint, jint, jint, jint, jboolean, jboolean, jint, jboolean, jboolean, jboolean);
@@ -58,7 +58,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_buildScene
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
  * Method:    nativeAdjustZoom
- * Signature: ()[F
+ * Signature: (I)[F
  */
 JNIEXPORT jfloatArray JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeAdjustZoom
   (JNIEnv *, jclass, jint);

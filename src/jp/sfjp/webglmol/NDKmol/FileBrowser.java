@@ -80,6 +80,7 @@ public class FileBrowser extends Activity {
 							title += header[j].substring(10).replace("  ", "");
 						}
 					}
+					reader.close();
 				} else if (upperCased.endsWith("SDF") || upperCased.endsWith("MOL")) {
 					title = "a SDF/MOL file";
 				} else {

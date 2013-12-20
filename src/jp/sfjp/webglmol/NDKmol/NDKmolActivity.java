@@ -43,6 +43,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 public class NDKmolActivity extends Activity {
+	public static final boolean GLES1 = false;
 	private float startX, startY, startDistance;
 	private float currentX, currentY, currentZ, currentSlabNear, currentSlabFar;
 	private float currentCameraZ;
@@ -107,6 +108,13 @@ public class NDKmolActivity extends Activity {
 		initializeResource();
 
 		glSV = new GLSurfaceView(this);
+		if (NDKmolActivity.GLES1) {
+		    glSV.setEGLContextClientVersion(1);			
+		} else {
+			glSV.setEGLConfigChooser(8, 8, 8, 8, 16, 0);
+		    glSV.setEGLContextClientVersion(2);
+		}
+		
 		view = new NdkView();
 		glSV.setRenderer(view);
 		applyPreferences();
@@ -149,6 +157,7 @@ public class NDKmolActivity extends Activity {
 			char buffer[] = new char[headerLength];
 			reader.read(buffer, 0, headerLength);
 			String header = new String(buffer);
+			reader.close();
 			alert("First 50KB of the file: \n\n" + header);
 		} catch (Exception e) {
 		}

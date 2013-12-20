@@ -20,13 +20,12 @@
 #ifndef GLES_INCLUDED
 #define GLES_INCLUDED
 
-// debug
-#define OPENGL_ES1
-
 #ifdef __ANDROID__
 #include <android/log.h>
-#define OPENGL_ES1
 #endif
+
+// debug
+//#define OPENGL_ES1
 
 #ifdef OPENGL_ES1
 #ifdef __ANDROID__
@@ -37,7 +36,8 @@
 
 #else // OPENGL_ES2
 
-#ifdef __ANROID__
+#ifdef __ANDROID__
+#include <GLES2/gl2.h>
 #else
 #include <OpenGLES/ES2/gl.h>
 #endif

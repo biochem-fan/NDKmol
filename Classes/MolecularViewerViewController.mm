@@ -77,24 +77,9 @@
 	
     [(MolecularView *)self.view setContext:context];
     [(MolecularView *)self.view setFramebuffer];
-	
 
-#ifndef OPENGL_ES1
-    // Initialize Shader
-	shaderProgram = CreateShader(vertexShader, fragmentShader);
-    
-	if (shaderProgram != 0) {
-	    shaderVertexPosition = glGetAttribLocation(shaderProgram, "vertexPosition");
-	    shaderVertexNormal = glGetAttribLocation(shaderProgram, "vertexNormal");
-        shaderProjectionMatrix = glGetUniformLocation(shaderProgram, "projectionMatrix");
-        shaderModelViewMatrix = glGetUniformLocation(shaderProgram, "modelviewMatrix");
-        shaderNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
-        
-        shaderVertexColor = glGetAttribLocation(shaderProgram, "vertexColor");
-	} else {
-        printf("Failed to create shader\n");
-    }
-#endif
+	// nativeGLResize is called within setFramebuffer. TODO: Refactor
+    nativeGLInit();
     
     // Animation. I don't know about them.
 	animating = FALSE;
@@ -338,51 +323,11 @@ static void calcFps() {
     calcFps();
     [(MolecularView *)self.view setFramebuffer];
 	
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_CULL_FACE);
-    
-    float cameraNear = -cameraZ + slabNear;
-	if (cameraNear < 1) cameraNear = 1;
-	float cameraFar = -cameraZ + slabFar;
-	if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
-	double xmin, xmax, ymin, ymax, zNear = cameraNear, zFar = cameraFar,
-	aspect = [(MolecularView *)self.view framebufferWidth] / (float)[(MolecularView *)self.view framebufferHeight];
-	ymax = zNear * tan(20 * M_PI / 360.0);
-	ymin = -ymax;
-	xmin = ymin * aspect;
-	xmax = ymax * aspect;
-#ifdef OPENGL_ES1
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
-#else
-	Mat16 projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
-#endif
-    
-    glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
-	glFogf(GL_FOG_END, zFar);
-    
-    currentModelViewMatrix = translationMatrix(0, 0, cameraZ);
     float ax, ay, az;
 	rotationQ.getAxis(&ax, &ay, &az);
-	Mat16 tmp = rotationMatrix(rotationQ.getAngle(), ax, ay, az);
-    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
-    tmp = translationMatrix(objX, objY, objZ);
-    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
-    
-#ifdef OPENGL_ES1
-    glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(0, 0, cameraZ);
-	glRotatef(180 * rotationQ.getAngle() / M_PI, ax, ay, az);
-	glTranslatef(objX, objY, objZ);
-#else
-    glUseProgram(shaderProgram);
-    glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
-#endif
-    
-    nativeGLRender();
+
+    nativeGLRender(objX, objY, objZ, ax, ay, az, rotationQ.getAngle(),
+                   cameraZ, slabNear, slabFar);
     
     [(MolecularView *)self.view presentFramebuffer];
 }
