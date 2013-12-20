@@ -22,24 +22,35 @@
 
 #ifdef __ANDROID__
 #include <android/log.h>
+#elif __APPLE__
+#include "TargetConditionals.h"
 #endif
 
 // debug
 //#define OPENGL_ES1
 
 #ifdef OPENGL_ES1
+
 #ifdef __ANDROID__
 #include <GLES/gl.h>
-#else
+#elif TARGET_OS_IPHONE
 #include <OpenGLES/ES1/gl.h>
+#elif __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
 #endif
 
-#else // OPENGL_ES2
-
+// OPENGL_ES2
+#else
 #ifdef __ANDROID__
 #include <GLES2/gl2.h>
-#else
+#elif TARGET_OS_IPHONE
 #include <OpenGLES/ES2/gl.h>
+#elif __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
 #endif
 
 #endif

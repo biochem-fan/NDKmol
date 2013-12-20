@@ -58,7 +58,9 @@ const GLchar *vertexShader =
 "} \n";
 
 const GLchar *fragmentShader =
+"#ifdef GL_ES \n"
 "precision mediump float; \n"
+"#endif \n"
 "varying vec4 colorOut; \n"
 "void main() { \n"
 "    gl_FragColor = colorOut; \n"
