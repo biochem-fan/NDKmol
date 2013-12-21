@@ -21,6 +21,7 @@
 #include "Line.hpp"
 #include "SmoothTube.hpp"
 #include <cmath>
+#include <cstdlib>
 
 SmoothTube::SmoothTube(std::vector<Vector3> &_points, std::vector<Color> &colors, std::vector<float> &radii)
  : Renderable() {

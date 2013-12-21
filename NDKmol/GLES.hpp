@@ -38,7 +38,10 @@
 #elif __APPLE__
 #include <OpenGL/gl.h>
 #else
+#define GL_GLEXT_PROTOTYPES
+#define EGL_EGLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glext.h>
 #endif
 
 // OPENGL_ES2
@@ -50,7 +53,10 @@
 #elif __APPLE__
 #include <OpenGL/gl.h>
 #else
+#define GL_GLEXT_PROTOTYPES
+#define EGL_EGLEXT_PROTOTYPES
 #include <GL/gl.h>
+#include <GL/glext.h>
 #endif
 
 #endif

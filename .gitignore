@@ -1,11 +1,9 @@
-<<<<<<< HEAD
 .classpath
 .externalToolBuilders/
 .project
 bin/
 libs/
 obj/
-=======
 build/
 .DS_*
->>>>>>> iOS/allVBO
+*.o

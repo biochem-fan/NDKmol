@@ -22,12 +22,19 @@
 //  g++ -g -std=c++11 -framework GLUT -framework OpenGL -I../NDKmol -o NDKmol *.o NDKmol.cpp
 //  ./NDKmol ../3V8T.pdb
 
+// How to compile for WebGL with Emscripten
+// ln -s PDB_FILE_YOU_WANT_TO_TEST.pdb initial.pdb
+// em++  -std=c++11 -I../NDKmol  -c ../NDKmol/*.cpp
+// em++  -std=c++11 -I../NDKmol --preload-file initial.pdb -s TOTAL_MEMORY=100000000 -o NDKmol.html *.o NDKmol.cpp
+
 #include <stdio.h>
 #include <string.h>
 #ifdef __APPLE__
 #include <OpenGL/gl.h>
 #include <Glut/glut.h>
 #else
+#define GL_GLEXT_PROTOTYPES
+#define EGL_EGLEXT_PROTOTYPES
 #include <GL/gl.h>
 #include <GL/glut.h>
 #endif
@@ -46,8 +53,13 @@ void on_display() {
 }
 
 void init(char* filename) {
+#ifdef __EMSCRIPTEN__
+  nativeLoadProtein("initial.pdb");
+  printf("Loaded preloaded initial.pdb\n");
+#else
   nativeLoadProtein(filename);
-  printf("Load %s\n", filename);
+  printf("Loaded %s\n", filename);
+#endif
   nativeGLResize(800, 600);
 
   nativeAdjustZoom(&objX, &objY, &objZ, &cameraZ, &slabNear, &slabFar, false);
