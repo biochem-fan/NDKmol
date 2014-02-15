@@ -43,8 +43,8 @@ void PDBReader::defineCell() {
 	protein->cx = (float)(protein->c * std::cos(M_PI / 180.0 * protein->beta));
 	protein->cy = (float)(protein->c * (std::cos(M_PI / 180.0 * protein->alpha) -
 			std::cos(M_PI / 180.0 * protein->gamma)
-	* std::cos(M_PI / 180.0 * protein->beta)
-	/ std::sin(M_PI / 180.0 * protein->gamma)));
+		      * std::cos(M_PI / 180.0 * protein->beta))
+	/ std::sin(M_PI / 180.0 * protein->gamma));
 	protein->cz = (float)(std::sqrt(protein->c * protein->c * std::sin(M_PI / 180.0 * protein->beta)
 	* std::sin(M_PI / 180.0 * protein->beta) - protein->cy * protein->cy));
 }
