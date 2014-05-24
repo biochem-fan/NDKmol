@@ -284,7 +284,7 @@ void nativeAdjustZoom(float *objX, float *objY, float *objZ, float *cameraZ, flo
 	*slabFar = maxD / 3;
 	*cameraZ = -(float)(maxD * 0.5 / std::tan(M_PI / 180.0 * FOV / 2));
 	
-	delete [] extent;
+	free(extent);
 }
 
 
