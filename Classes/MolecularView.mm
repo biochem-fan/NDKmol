@@ -53,7 +53,7 @@
                                         kEAGLColorFormatRGBA8, kEAGLDrawablePropertyColorFormat,
                                         nil];
     }
-	msaaEnabled = ([[[UIDevice currentDevice]systemVersion] floatValue] >= 4.0f);
+	msaaEnabled = ([[[UIDevice currentDevice]systemVersion] floatValue] >= 4.0f); // FIXME: warning here
     if (msaaEnabled) NSLog(@"msaa enabled");
 	else  NSLog(@"msaa disabled");
 	

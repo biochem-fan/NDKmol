@@ -51,6 +51,9 @@ Line::Line() {
 }
 
 void Line::prepareVBO() {
+	return;
+	
+	// TODO: implement VBO
     GLuint vbo[2];
     glGenBuffers(2, vbo);
 
