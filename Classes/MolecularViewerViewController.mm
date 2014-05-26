@@ -25,6 +25,7 @@
 #import "SettingViewController.h"
 
 #include "GLES.hpp"
+#include "MTZreader.hpp"
 
 @interface MolecularViewerViewController ()
 @property (nonatomic, retain) EAGLContext *context;
@@ -42,6 +43,11 @@
     NSString* filePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
 	nativeLoadProtein([filePath UTF8String]);
 	[self resetView];
+}
+
+- (void)loadMTZ: (NSString *) fileName {
+    NSString* filePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
+	nativeLoadMTZ([filePath UTF8String]);
 }
 
 - (void)resetView {
@@ -113,7 +119,9 @@
 	[rotationGesture release];
 	
 	// Load initial model
-	[self loadMolecule: @"initial.pdb"];
+	[self loadMolecule: @"2OUP.pdb"];
+	// Test loading MTZ file
+	[self loadMTZ: @"2oup.ccp4"];
 }
 
 // TODO: Add slab UI
@@ -141,6 +149,7 @@
 	objX = currentX + tx;
 	objY = currentY + ty;
 	objZ = currentZ + tz;
+	nativeUpdateMap(false);
 	[self drawFrame];
 }
 
@@ -326,8 +335,9 @@ static void calcFps() {
     float ax, ay, az;
 	rotationQ.getAxis(&ax, &ay, &az);
 
-    nativeGLRender(objX, objY, objZ, ax, ay, az, rotationQ.getAngle(),
+    nativeSetScene(objX, objY, objZ, ax, ay, az, rotationQ.getAngle(),
                    cameraZ, slabNear, slabFar);
+	nativeGLRender();
     
     [(MolecularView *)self.view presentFramebuffer];
 }

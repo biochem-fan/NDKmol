@@ -20,6 +20,8 @@
 #ifndef NDKVIEW_INCLUDED
 #define NDKVIEW_INCLUDED
 
+#include "Matrix.hpp"
+
 // Representations
 // IMPORTANT TODO: When SettingViewController.mm is changed, these constants must be modified!
 
@@ -50,11 +52,23 @@
 #define COLOR_POLAR 3
 #define COLOR_B_FACTOR 4
 
+typedef struct {
+	float objX, objY, objZ; // centering
+	float prevObjX, prevObjY, prevObjZ; // used by updateMesh
+	float ax, ay, az, rot; // rotation axis and angle
+	float cameraZ, slabNear, slabFar;
+	
+	Mat16 projectionMatrix, rotationGroupMatrix, modelGroupMatrix;
+} SceneInfo;
+
 extern void nativeGLResize (int width, int height);
-extern void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+extern void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
                            float cameraZ, float slabNear, float slabFar);
+extern void nativeGLRender();
 extern void nativeLoadProtein(const char* filename);
+extern void nativeLoadMTZ(const char* filename);
 extern void nativeLoadSDF(const char* filename);
+extern void nativeUpdateMap(bool force);
 extern void nativeAdjustZoom(float *, float *, float *, float *, float *, float *, bool);
 extern void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode, bool showSidechain, bool showUnitcell,
 				int nucleicAcidMode, bool showSolvents, bool resetView, bool doNotSmoothen, bool symopHetatms);

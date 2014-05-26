@@ -40,6 +40,8 @@
 #include "VBOCylinder.hpp"
 #include "ChemDatabase.hpp"
 #include "Protein.hpp"
+#include "MTZreader.hpp"
+#include "MarchingSquares.hpp"
 #include "View.hpp"
 #include "Debug.hpp"
 #ifdef __ANDROID__
@@ -48,12 +50,17 @@
 
 #define DIV 1
 
+// Global data TODO: support multiple models
 Atom *atoms = NULL;
 Protein *protein = NULL;
+MTZfile *mtzfile = NULL;
+MarchingSquares *ms = NULL;
 Renderable *scene = NULL;
 
 int width, height;
+SceneInfo sceneInfo;
 
+// Settings
 float sphereRadius = 1.5f;
 float cylinderRadius = 0.2f;
 float lineWidth = 2.0f;
@@ -165,14 +172,14 @@ void nativeGLResize (int w, int h) {
     height = h;
 }
 
-void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
                     float cameraZ, float slabNear, float slabFar) {
-	if (scene == NULL) return;
-    glClearColor(0, 0, 0, 1);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glDisable(GL_CULL_FACE);
-    
-    float cameraNear = -cameraZ + slabNear;
+	sceneInfo.prevObjX =sceneInfo.objX; sceneInfo.prevObjY =sceneInfo.objY; sceneInfo.prevObjZ =sceneInfo.objZ;
+	sceneInfo.objX = objX; sceneInfo.objY = objY; sceneInfo.objZ = objZ;
+	sceneInfo.ax = ax; sceneInfo.ay = ay; sceneInfo.az = az; sceneInfo.rot = rot;
+	sceneInfo.cameraZ = cameraZ; sceneInfo.slabNear = slabNear; sceneInfo.slabFar = slabFar;
+	
+	float cameraNear = -cameraZ + slabNear;
 	if (cameraNear < 1) cameraNear = 1;
 	float cameraFar = -cameraZ + slabFar;
 	if (cameraNear + 1 > cameraFar) cameraFar = cameraNear + 1;
@@ -182,13 +189,24 @@ void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, floa
 	ymin = -ymax;
 	xmin = ymin * aspect;
 	xmax = ymax * aspect;
-	Mat16 projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+	sceneInfo.projectionMatrix = matrixFrustum(xmin, xmax, ymin, ymax, zNear, zFar);
+	Mat16 tCamera = translationMatrix(0, 0, sceneInfo.cameraZ);
+	Mat16 r = rotationMatrix(rot, ax, ay, az);
+	Mat16 centering = translationMatrix(objX, objY, objZ);
+    sceneInfo.rotationGroupMatrix = multiplyMatrix(tCamera, r);
+    sceneInfo.modelGroupMatrix = multiplyMatrix(sceneInfo.rotationGroupMatrix, centering);
+}
+
+void nativeGLRender() {
+	if (scene == NULL) return;
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glDisable(GL_CULL_FACE);
 	
 #ifdef OPENGL_ES1
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	//glFrustumf(xmin, xmax, ymin, ymax, zNear, zFar);
-	glLoadMatrixf(projectionMatrix.m);
+	glLoadMatrixf(sceneInfo.projectionMatrix.m);
 #else
 	
 #endif
@@ -196,22 +214,14 @@ void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, floa
 //  glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
 //	glFogf(GL_FOG_END, zFar);
     
-	currentModelViewMatrix = translationMatrix(0, 0, cameraZ);
-	Mat16 tmp = rotationMatrix(rot, ax, ay, az);
-    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
-    tmp = translationMatrix(objX, objY, objZ);
-    currentModelViewMatrix = multiplyMatrix(currentModelViewMatrix, tmp);
-
+	currentModelViewMatrix = sceneInfo.modelGroupMatrix;
 #ifdef OPENGL_ES1
     glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glLoadMatrixf(currentModelViewMatrix.m);
-	//glTranslatef(0, 0, cameraZ);
-	//glRotatef(180 * rot / M_PI, ax, ay, az);
-	//glTranslatef(objX, objY, objZ);
 #else
 	glUseProgram(shaderProgram);
-    glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, projectionMatrix.m);
+    glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, sceneInfo.projectionMatrix.m);
 #endif
 
     scene->render();
@@ -229,6 +239,14 @@ void nativeLoadProtein(const char* filename) {
 	}
 	protein = pdb.parsePDB(filename);
 	atoms = protein->atoms;
+}
+
+void nativeLoadMTZ(const char* filename) {
+	if (mtzfile) {
+		delete mtzfile;
+		mtzfile = NULL;
+	}
+	mtzfile = new MTZfile(filename);
 }
 
 void nativeLoadSDF(const char* filename) {
@@ -394,6 +412,30 @@ void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode
 	} else { // No SYMOP, No BIOMT defined, or NMR structure
 		scene->children.push_back(asu);
 	}
+	
+	if (1) { // TODO: MTZ test.
+		if (mtzfile) {
+			printf("Build mesh\n");
+			ms = new MarchingSquares(mtzfile);
+			nativeUpdateMap(true);
+			scene->children.push_back(ms);
+		}
+	}
+}
+
+void nativeUpdateMap(bool force) {
+	if (!ms) return;
+/*	if ((sceneInfo.prevObjX - sceneInfo.objX) * (sceneInfo.prevObjX - sceneInfo.objX) +
+		(sceneInfo.prevObjY - sceneInfo.objY) * (sceneInfo.prevObjY - sceneInfo.objY) +
+		(sceneInfo.prevObjZ - sceneInfo.objZ) * (sceneInfo.prevObjZ - sceneInfo.objZ) < 3 && !force) return;
+*/
+	
+	Mat16 msMatrix = ms->getMatrix();
+	Mat16 invMatrix = transposedInverseMatrix(msMatrix);
+	Vector3 center(-sceneInfo.objX, -sceneInfo.objY, -sceneInfo.objZ);
+	center.applyMat16(invMatrix);
+	printf("%f %f %f cz = %f\n", center.x, center.y, center.z, sceneInfo.cameraZ);
+	ms->build((int)center.x, (int)center.y, (int)center.z, 10, 0.5);
 }
 
 void nativeGLInit() {

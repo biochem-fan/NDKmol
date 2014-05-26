@@ -73,3 +73,15 @@ Vector3& Vector3::applyMat16(Mat16 mat) {
 	x = nx; y = ny; z = nz;
 	return *this;
 }
+
+Vector3& Vector3::applyMat16Transposed(Mat16 mat) {
+	float nx, ny, nz;
+	
+	nx = mat.m[0] * x + mat.m[4] * y + mat.m[8] * z + mat.m[12];
+	ny = mat.m[1] * x + mat.m[5] * y + mat.m[9] * z + mat.m[13];
+	nz = mat.m[2] * x + mat.m[6] * y + mat.m[10] * z + mat.m[14];
+	
+	x = nx; y = ny; z = nz;
+	return *this;
+}
+

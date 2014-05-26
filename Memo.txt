@@ -15,12 +15,12 @@
 
 - Fix lighting (in ES2)
 - Fix lighting (in ES1; VBOSphere doesn't preserve lighting settings?)
-- Better matrix handling
+- Better matrix handling (transposed or not)
 - Handle OpenGL context lost
 
 - Refactor VBOSphere & VBOCylinder
 - Refactor Sphere/Cylinder Geometory
-   (avoid static?)
+   (remove static variables)
 - Instancing for spheres and cylinders
 
 - FPS monitor

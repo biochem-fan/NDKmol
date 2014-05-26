@@ -1,6 +1,6 @@
 /*  NDKmol - Molecular Viewer on Android NDK
 
-     (C) Copyright 2011 - 2012, biochem_fan
+     (C) Copyright 2011 - 2014, biochem_fan
 
      This file is part of NDKmol.
 
@@ -17,24 +17,25 @@
      You should have received a copy of the GNU Lesser General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef VECTOR3_INCLUDED
-#define VECTOR3_INCLUDED
+#ifndef MTZREADER_INCLUDED
+#define MTZREADER_INCLUDED
 
+#include <string>
 #include "Matrix.hpp"
 
-class Vector3 {
+class MTZfile {
+private:
+
 public:
-	float x, y, z;
-	Vector3();
-	Vector3(float x, float y, float z);
-	void set(float x, float y, float z);
-	static float dot(Vector3 &p, Vector3 &q);
-	static Vector3 cross(Vector3 &p, Vector3 &q);
-	static double norm(float x, float y, float z);
-	Vector3& normalize();
-	Vector3& multiplyScalar(float s);
-	Vector3& applyMat16(Mat16 m);
-	Vector3& applyMat16Transposed(Mat16 m);
+	MTZfile(std::string filename);
+	~MTZfile();
+	Mat16 getMatrix(bool scale);
+	
+	float* map = NULL;
+	// These arrays are 1-indexed!!
+	int NCRS[4], NSTART[4], NXYZ[4], MAPCRS[4], ISPG, NSYMBT;
+	float a, b, c, alpha, beta, gamma, AMIN, AMAX, AMEAN, ARMS;
+	float basis[4][3];
 };
 
 #endif
