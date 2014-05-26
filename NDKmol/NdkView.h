@@ -64,6 +64,8 @@ typedef struct {
 extern void nativeGLResize (int width, int height);
 extern void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
                            float cameraZ, float slabNear, float slabFar);
+extern void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+                           float cameraZ, float slabNear, float slabFar);
 extern void nativeGLRender();
 extern void nativeLoadProtein(const char* filename);
 extern void nativeLoadMTZ(const char* filename);

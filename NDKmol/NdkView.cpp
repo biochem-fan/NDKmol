@@ -197,6 +197,13 @@ void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, floa
     sceneInfo.modelGroupMatrix = multiplyMatrix(sceneInfo.rotationGroupMatrix, centering);
 }
 
+// Left for compatibility reason
+void nativeGLRender(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
+					float cameraZ, float slabNear, float slabFar) {
+	nativeSetScene(objX, objY, objZ, ax, ay, az, rot, cameraZ, slabNear, slabFar);
+	nativeGLRender();
+}
+
 void nativeGLRender() {
 	if (scene == NULL) return;
     glClearColor(0, 0, 0, 1);

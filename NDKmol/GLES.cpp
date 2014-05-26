@@ -30,6 +30,7 @@ unsigned int shaderObjColor = 0, shaderUseVertexColor = 0, shaderVertexColor = 0
 
 #ifndef OPENGL_ES1
 const GLchar *vertexShader =
+"#version 100\n"
 "attribute vec4 vertexPosition; \n" // INPUT is vec3; the 4th element is automatically set to 1
 "attribute vec4 vertexNormal; \n"
 "attribute vec4 vertexColor; \n"
@@ -42,22 +43,23 @@ const GLchar *vertexShader =
 "void main() {\n"
 "     gl_Position = projectionMatrix * modelviewMatrix * vertexPosition; \n"
 " \n"
-"     vec4 diffuseLight1 = vec4(0.6, 0.6, 0.6, 1.0); \n"
-"     vec4 ambientLight1 = vec4(0.2, 0.2, 0.2, 1.0); \n"
-"     vec4 positionLight1 = vec4(0.0, 0.0, 1.0, 1.0); \n"
-"     vec4 diffuseLight2 = vec4(0.1, 0.1, 0.1, 1.0); \n"
-"     vec4 positionLight2 = vec4(0.0, 0.0, -1.0, 1.0); \n"
-"     vec3 transformedNormal = normalize(normalMatrix * vertexNormal.xyz); \n"
-"     vec4 matColor = vertexColor; \n"
-"     if (vertexNormal.w == 0.0) {colorOut = matColor; return;} \n"
-"     vec4 diffuse = matColor * diffuseLight1 * abs(dot(vec4(transformedNormal, 1), positionLight1));"
-"     diffuse += matColor * diffuseLight2 * abs(dot(vec4(transformedNormal, 1), positionLight2));"
-"     vec4 ambient = matColor * ambientLight1;"
-"     colorOut = diffuse + ambient; \n"
-"     colorOut.a = 1.0; \n"
+		"     vec4 diffuseLight1 = vec4(0.6, 0.6, 0.6, 1.0); \n"
+		"     vec4 ambientLight1 = vec4(0.2, 0.2, 0.2, 1.0); \n"
+		"     vec4 positionLight1 = vec4(0.0, 0.0, 1.0, 1.0); \n"
+		"     vec4 diffuseLight2 = vec4(0.1, 0.1, 0.1, 1.0); \n"
+		"     vec4 positionLight2 = vec4(0.0, 0.0, -1.0, 1.0); \n"
+		"     vec3 transformedNormal = normalize(normalMatrix * vertexNormal.xyz); \n"
+		"     vec4 matColor = vertexColor; \n"
+		"     if (vertexNormal.w == 0.0) {colorOut = matColor; return;} \n"
+		"     vec4 diffuse = matColor * diffuseLight1 * abs(dot(vec4(transformedNormal, 1), positionLight1));"
+		"     diffuse += matColor * diffuseLight2 * abs(dot(vec4(transformedNormal, 1), positionLight2));"
+		"     vec4 ambient = matColor * ambientLight1;"
+		"     colorOut = diffuse + ambient; \n"
+		"     colorOut.a = 1.0; \n"
 "} \n";
 
 const GLchar *fragmentShader =
+"#version 100\n"
 "#ifdef GL_ES \n"
 "precision mediump float; \n"
 "#endif \n"

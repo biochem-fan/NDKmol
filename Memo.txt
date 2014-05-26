@@ -6,7 +6,7 @@
 
 - Clean up NdkView.java (especially onDrawFrame)
 - Build system for Android 1.6 (OpenGL ES 1.0)
-   Now we have to edit GLES.hpp, Applicatin.mk, Android.mk, AndroidManifest.xml, NDKmolActivity.java
+  Now we have to edit GLES.hpp, Applicatin.mk, Android.mk, AndroidManifest.xml, NDKmolActivity.java
 
 - Support screen rotation in Android
 
