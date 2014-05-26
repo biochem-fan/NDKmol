@@ -55,8 +55,6 @@ public class NDKmolActivity extends Activity {
 	private String currentFilename;
 	private final int IntentForURI = 1;
 	private final int IntentForPreferences = 2;
-	
-	private static native void nativeUpdateMap(boolean force);
 
 	static {
 		System.loadLibrary("Ndkmol");
@@ -631,7 +629,7 @@ public class NDKmolActivity extends Activity {
 			if (prevPointerCount <= 1) {
 				startDistance = distance;
 			}
-			Log.d("ESmol", "multitouched dist = " + distance);
+			Log.d("NDKmol", "multitouched dist = " + distance);
 		} else if (prevPointerCount > 1) { // 2 to 1
 			startX = x;
 			startY = y;
@@ -667,7 +665,7 @@ public class NDKmolActivity extends Activity {
 					if (startDistance > 150) {
 						if (distance > 100) {
 							view.cameraZ = currentCameraZ * startDistance / distance;
-							Log.d("ESmol", "distance = " + distance + " start distance = " + startDistance + " CameraZ = " + view.cameraZ);
+							Log.d("NDKmol", "distance = " + distance + " start distance = " + startDistance + " CameraZ = " + view.cameraZ);
 						}
 					} else {
 						float scaleFactor = 0.13f;
@@ -678,12 +676,12 @@ public class NDKmolActivity extends Activity {
 						view.objX = currentX + translation.x;
 						view.objY = currentY + translation.y;
 						view.objZ = currentZ + translation.z;
-						nativeUpdateMap(false);					
+						view.nativeUpdateMap(false);
 					}
 					glSV.requestRender();
 				} else {
 					if (touchMode == 0) { // translation
-						Log.d("ESmol", "cameraZ: " + view.cameraZ);
+						Log.d("NDKmol", "cameraZ: " + view.cameraZ);
 						float scaleFactor = 0.13f;
 						if (view.cameraZ > -150) scaleFactor = 0.035f; // FIXME: improve
 						if (view.cameraZ > -50) scaleFactor = 0.02f;
@@ -692,6 +690,7 @@ public class NDKmolActivity extends Activity {
 						view.objX = currentX + translation.x;
 						view.objY = currentY + translation.y;
 						view.objZ = currentZ + translation.z;
+						view.nativeUpdateMap(false);	
 					} else if (touchMode == 1) { // zoom
 						view.cameraZ = currentCameraZ + (startY - y) * 0.5f;
 					} else	if (touchMode == 2) { // rotate

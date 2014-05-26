@@ -57,7 +57,7 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadCCP4
 
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
- * Method:    nativeUpdateMesh
+ * Method:    nativeUpdateMap
  * Signature: (Z)V
  */
 JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeUpdateMap

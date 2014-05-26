@@ -97,7 +97,7 @@ void MarchingSquares::render() {
 	glVertexAttribPointer(shaderVertexPosition, 3, GL_FLOAT, GL_FALSE, 0, vertexBuffer);
 #endif
 
-	glDrawArrays(GL_LINES, 0, nPoints);
+	glDrawArrays(GL_LINES, 0, nPoints / 3);
 			
 #ifdef OPENGL_ES1
 	glDisableClientState(GL_VERTEX_ARRAY);
@@ -121,7 +121,7 @@ MarchingSquares::MarchingSquares(CCP4file *mapfile) {
 	field = mapfile->map;
 	
 	nPoints = 0;
-	objectColor.r = 0; objectColor.g = 0; objectColor.b = 0.8; objectColor.a = 1.0;
+	objectColor.r = 0.2; objectColor.g = 0.2; objectColor.b = 1.0; objectColor.a = 1.0;
 	width = 1;
 	matrix = mapfile->getMatrix(false);
 	

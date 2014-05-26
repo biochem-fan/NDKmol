@@ -55,6 +55,7 @@ public class NdkView implements GLSurfaceView.Renderer  {
 			boolean showUnitcell, int nucleicAcidMode, boolean showSolvents, 
 			boolean doNotSmoothen, boolean symopHetatms);
 	public static native float[] nativeAdjustZoom(int symmetryMode);
+	public static native void nativeUpdateMap(boolean force);
 	
 	public NdkView() {
 		resetCamera();

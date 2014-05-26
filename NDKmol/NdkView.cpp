@@ -259,6 +259,10 @@ void nativeLoadProtein(const char* filename) {
 		delete protein;
 		protein = NULL;
 	}
+	if (mapfile) { // clear map now. map must be deleted after MarchingSquares objects.
+		delete mapfile;
+		mapfile = NULL;
+	}
 	protein = pdb.parsePDB(filename);
 	atoms = protein->atoms;
 }
@@ -450,7 +454,6 @@ void nativeUpdateMap(bool force) {
 		(sceneInfo.prevObjY - sceneInfo.objY) * (sceneInfo.prevObjY - sceneInfo.objY) +
 		(sceneInfo.prevObjZ - sceneInfo.objZ) * (sceneInfo.prevObjZ - sceneInfo.objZ) < 3 && !force) return;
 */
-	
 	Mat16 msMatrix = ms->getMatrix();
 	Mat16 invMatrix = transposedInverseMatrix(msMatrix);
 	Vector3 center(-sceneInfo.objX, -sceneInfo.objY, -sceneInfo.objZ);
