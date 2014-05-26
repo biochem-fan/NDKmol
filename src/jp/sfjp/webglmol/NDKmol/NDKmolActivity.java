@@ -43,7 +43,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 
 public class NDKmolActivity extends Activity {
-	public static final boolean GLES1 = false;
+	public static final boolean GLES1 = true;//false;
 	private float startX, startY, startDistance;
 	private float currentX, currentY, currentZ, currentSlabNear, currentSlabFar;
 	private float currentCameraZ;
@@ -55,6 +55,8 @@ public class NDKmolActivity extends Activity {
 	private String currentFilename;
 	private final int IntentForURI = 1;
 	private final int IntentForPreferences = 2;
+	
+	private static native void nativeUpdateMap(boolean force);
 
 	static {
 		System.loadLibrary("Ndkmol");
@@ -235,6 +237,8 @@ public class NDKmolActivity extends Activity {
 		} else if (filePath.toUpperCase().endsWith("SDF") || filePath.toUpperCase().endsWith("MOL")) {
 			view.loadSDF(filePath);
 			currentFilename = filePath;
+		} else if (filePath.toUpperCase().endsWith("CCP4")) {
+			view.loadCCP4(filePath);
 		} else {
 			alert(getString(R.string.unknownFileType));
 		}
@@ -674,6 +678,7 @@ public class NDKmolActivity extends Activity {
 						view.objX = currentX + translation.x;
 						view.objY = currentY + translation.y;
 						view.objZ = currentZ + translation.z;
+						nativeUpdateMap(false);					
 					}
 					glSV.requestRender();
 				} else {

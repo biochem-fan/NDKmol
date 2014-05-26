@@ -108,22 +108,22 @@ void MarchingSquares::render() {
 	glPopMatrix();
 }
 	
-MarchingSquares::MarchingSquares(MTZfile *mtzfile) {
-	nc = mtzfile->NCRS[1]; nr = mtzfile->NCRS[2]; ns = mtzfile->NCRS[3];
+MarchingSquares::MarchingSquares(CCP4file *mapfile) {
+	nc = mapfile->NCRS[1]; nr = mapfile->NCRS[2]; ns = mapfile->NCRS[3];
 	maxvert = 1000000; // 1M vertices = 3 * 4  MB
 	
-	size = mtzfile->NCRS[1];
-	size2 = size * mtzfile->NCRS[2];
-	size3 = size2 * mtzfile->NCRS[3];
+	size = mapfile->NCRS[1];
+	size2 = size * mapfile->NCRS[2];
+	size3 = size2 * mapfile->NCRS[3];
 		
 	yd = size;
 	zd = size2;
-	field = mtzfile->map;
+	field = mapfile->map;
 	
 	nPoints = 0;
 	objectColor.r = 0; objectColor.g = 0; objectColor.b = 0.8; objectColor.a = 1.0;
 	width = 1;
-	matrix = mtzfile->getMatrix(false);
+	matrix = mapfile->getMatrix(false);
 	
 	vertexBuffer = (float*)malloc(sizeof(float) * maxvert);
 }

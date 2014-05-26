@@ -68,7 +68,7 @@ extern void nativeGLRender(float objX, float objY, float objZ, float ax, float a
                            float cameraZ, float slabNear, float slabFar);
 extern void nativeGLRender();
 extern void nativeLoadProtein(const char* filename);
-extern void nativeLoadMTZ(const char* filename);
+extern void nativeLoadCCP4(const char* filename);
 extern void nativeLoadSDF(const char* filename);
 extern void nativeUpdateMap(bool force);
 extern void nativeAdjustZoom(float *, float *, float *, float *, float *, float *, bool);

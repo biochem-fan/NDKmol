@@ -17,17 +17,17 @@
      You should have received a copy of the GNU Lesser General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "MTZreader.hpp"
+#include "CCP4reader.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
 
-MTZfile::MTZfile(std::string filename) {
-	FILE *mtzin = std::fopen(filename.c_str(), "rb");
-	if (!mtzin) return;
+CCP4file::CCP4file(std::string filename) {
+	FILE *ccp4in = std::fopen(filename.c_str(), "rb");
+	if (!ccp4in) return;
 	
 	char buf[300];
-	std::fread(buf, 4, 56, mtzin);
+	std::fread(buf, 4, 56, ccp4in);
 	int *header_int = (int*)buf;
 	float *header_float = (float*)buf;
 	
@@ -56,23 +56,23 @@ MTZfile::MTZfile(std::string filename) {
 	AMEAN = header_float[21];
 	ARMS = header_float[54];
 	
-	printf("MTZfile: NCRS = (%d, %d, %d), NSTART = (%d, %d, %d), NXYZ = (%d, %d, %d)\n",
+	printf("CCP4file: NCRS = (%d, %d, %d), NSTART = (%d, %d, %d), NXYZ = (%d, %d, %d)\n",
 		   NCRS[1], NCRS[2], NCRS[3], NSTART[1], NSTART[2], NSTART[3], NXYZ[1], NXYZ[2], NXYZ[3]);
-	printf("MTZfile: CELL %f %f %f %f %f %f\n", a, b, c, alpha, beta, gamma);
-	printf("MTZfile: MIN %f MEAN %f MAX %f RMS %f\n", AMIN, AMEAN, AMAX, ARMS);
+	printf("CCP4file: CELL %f %f %f %f %f %f\n", a, b, c, alpha, beta, gamma);
+	printf("CCP4file: MIN %f MEAN %f MAX %f RMS %f\n", AMIN, AMEAN, AMAX, ARMS);
 	
-	std:fseek(mtzin, 256 * 4 + NSYMBT, SEEK_SET);
+	std:fseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
 	map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
 	if (!map) {
-		fclose(mtzin);
+		fclose(ccp4in);
 		return;
 	}
-	std::fread(map, sizeof(float), NCRS[1] * NCRS[2] * NCRS[3], mtzin);
+	std::fread(map, sizeof(float), NCRS[1] * NCRS[2] * NCRS[3], ccp4in);
 	
-	fclose(mtzin);
+	fclose(ccp4in);
 }
 
-Mat16 MTZfile::getMatrix(bool scale) {
+Mat16 CCP4file::getMatrix(bool scale) {
 	// TODO: Should share codes with PDBReader.cpp
 	basis[1][0] = a;
 	basis[1][1] = 0;
@@ -143,7 +143,7 @@ Mat16 MTZfile::getMatrix(bool scale) {
 	 */
 }
 
-MTZfile::~MTZfile() {
+CCP4file::~CCP4file() {
 	if (!map) {
 		free(map);
 	}

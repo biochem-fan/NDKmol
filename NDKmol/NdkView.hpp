@@ -49,6 +49,23 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
 
 /*
  * Class:     jp_sfjp_webglmol_NDKmol_NdkView
+ * Method:    nativeLoadCCP4
+ * Signature: (Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadCCP4
+  (JNIEnv *, jclass, jstring);
+
+/*
+ * Class:     jp_sfjp_webglmol_NDKmol_NdkView
+ * Method:    nativeUpdateMesh
+ * Signature: (Z)V
+ */
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeUpdateMap
+  (JNIEnv *, jboolean);
+
+
+/*
+ * Class:     jp_sfjp_webglmol_NDKmol_NdkView
  * Method:    buildScene
  * Signature: (IIIIZZIZZZ)V
  */

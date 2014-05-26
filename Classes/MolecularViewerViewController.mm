@@ -25,7 +25,7 @@
 #import "SettingViewController.h"
 
 #include "GLES.hpp"
-#include "MTZreader.hpp"
+#include "CCP4reader.hpp"
 
 @interface MolecularViewerViewController ()
 @property (nonatomic, retain) EAGLContext *context;
@@ -47,7 +47,7 @@
 
 - (void)loadMTZ: (NSString *) fileName {
     NSString* filePath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fileName];
-	nativeLoadMTZ([filePath UTF8String]);
+	nativeLoadCCP4([filePath UTF8String]);
 }
 
 - (void)resetView {

@@ -40,7 +40,7 @@
 #include "VBOCylinder.hpp"
 #include "ChemDatabase.hpp"
 #include "Protein.hpp"
-#include "MTZreader.hpp"
+#include "CCP4reader.hpp"
 #include "MarchingSquares.hpp"
 #include "View.hpp"
 #include "Debug.hpp"
@@ -53,7 +53,7 @@
 // Global data TODO: support multiple models
 Atom *atoms = NULL;
 Protein *protein = NULL;
-MTZfile *mtzfile = NULL;
+CCP4file *mapfile = NULL;
 MarchingSquares *ms = NULL;
 Renderable *scene = NULL;
 
@@ -131,6 +131,21 @@ JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadSDF
 	nativeLoadSDF(filename);
 
 	env->ReleaseStringUTFChars(path, filename);
+}
+
+// loadCCP4
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeLoadCCP4
+(JNIEnv *env, jclass clasz, jstring path) {
+	const char *filename = env->GetStringUTFChars(path, NULL);
+
+	nativeLoadCCP4(filename);
+
+	env->ReleaseStringUTFChars(path, filename);
+}
+
+JNIEXPORT void JNICALL Java_jp_sfjp_webglmol_NDKmol_NdkView_nativeUpdateMap
+  (JNIEnv *env, jboolean force) {
+	nativeUpdateMap(force);
 }
 
 // onSurfaceCreated
@@ -248,12 +263,12 @@ void nativeLoadProtein(const char* filename) {
 	atoms = protein->atoms;
 }
 
-void nativeLoadMTZ(const char* filename) {
-	if (mtzfile) {
-		delete mtzfile;
-		mtzfile = NULL;
+void nativeLoadCCP4(const char* filename) {
+	if (mapfile) {
+		delete mapfile;
+		mapfile = NULL;
 	}
-	mtzfile = new MTZfile(filename);
+	mapfile = new CCP4file(filename);
 }
 
 void nativeLoadSDF(const char* filename) {
@@ -421,9 +436,8 @@ void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode
 	}
 	
 	if (1) { // TODO: MTZ test.
-		if (mtzfile) {
-			printf("Build mesh\n");
-			ms = new MarchingSquares(mtzfile);
+		if (mapfile) {
+			ms = new MarchingSquares(mapfile);
 			nativeUpdateMap(true);
 			scene->children.push_back(ms);
 		}

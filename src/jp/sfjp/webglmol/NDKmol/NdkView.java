@@ -50,6 +50,7 @@ public class NdkView implements GLSurfaceView.Renderer  {
             float cameraZ, float slabNear, float slabFar);
 	private static native void nativeLoadProtein(String path);
 	private static native void nativeLoadSDF(String path);
+	private static native void nativeLoadCCP4(String path);
 	private static native void buildScene(int proteinMode, int hetatmMode, int symmetryMode, int colorMode, boolean showSidechain, 
 			boolean showUnitcell, int nucleicAcidMode, boolean showSolvents, 
 			boolean doNotSmoothen, boolean symopHetatms);
@@ -127,5 +128,10 @@ public class NdkView implements GLSurfaceView.Renderer  {
 		nativeLoadSDF(path);	
 		prepareScene();
 		resetCamera();
+	}
+	
+	public void loadCCP4(String path) {
+		nativeLoadCCP4(path);	
+		prepareScene();
 	}
 }

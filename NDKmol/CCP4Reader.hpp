@@ -17,18 +17,18 @@
      You should have received a copy of the GNU Lesser General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#ifndef MTZREADER_INCLUDED
-#define MTZREADER_INCLUDED
+#ifndef CCP4READER_INCLUDED
+#define CCP4READER_INCLUDED
 
 #include <string>
 #include "Matrix.hpp"
 
-class MTZfile {
+class CCP4file {
 private:
 
 public:
-	MTZfile(std::string filename);
-	~MTZfile();
+	CCP4file(std::string filename);
+	~CCP4file();
 	Mat16 getMatrix(bool scale);
 	
 	float* map = NULL;

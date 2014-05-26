@@ -22,7 +22,7 @@
 
 #include <string>
 #include "Renderable.hpp"
-#include "MTZreader.hpp"
+#include "CCP4reader.hpp"
 
 // FIXME: should inherit Line?
 class MarchingSquares: public Renderable {
@@ -44,7 +44,7 @@ private:
 	virtual void setMatrix();
 
 public:
-	MarchingSquares(MTZfile *mtzfile);
+	MarchingSquares(CCP4file *mapfile);
 	void build(int cc, int cr, int cs, int radius, float isol);
 	void render();
 	float *field;
