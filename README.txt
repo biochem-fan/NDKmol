@@ -1,4 +1,4 @@
-NDKmol - Molecular Viewer on Android NDK
+NDKmol - Molecular Viewer on Android NDK and iOS
 
 == About ==
 
@@ -92,7 +92,7 @@ biochem_fan@users.sourceforge.jp
 
 == iOS support ==
 
-iOS port is being merged to this repository, but not completed yet.
+iOS port was merged to this repository.
 
 How to use:
 
@@ -112,3 +112,28 @@ How to integrate to your code:
 
  To change models, save PDB file in the resource directory and
  call "loadMolecule" method in MolecularViewerViewController.mm
+ 
+ == Build instructions ==
+ 
+ Android:
+  Don't forget to install Android NDK as well as Android SDK.
+  
+== Switching OpenGL ES 1.0 and 2.0 ==
+
+By default, iOS version uses GL ES 2.0 and Android version uses GL ES 1.0.
+To change this behaviour, please edit GLES.hpp.
+
+For Android, you need to edit three files as well.
+- Applicatin.mk
+- Android.mk
+- AndroidManifest.xml
+   see comments in the file
+- NDKmolActivity.java
+   public static final boolean GLES1 = true; // or false
+
+I don't know why, but the Android simulator fails to run GL ES 2.0 version of NDKmol,
+which works on actual devices.
+
+
+
+

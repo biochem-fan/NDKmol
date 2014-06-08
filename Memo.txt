@@ -2,7 +2,6 @@
 
 - !! In real device, changing representation sometimes leads to blank screen or crash
 - !! ES 2.0 doesn't work on Android Simulator due to shader link error. It works on Nexus 7 (2013).
-- !! ES 1.0 doesn't work on iOS (blank screen)
 - !! Marching Squares doesn't work on Android real device!! (Mesh broken)
 
 - Clean up NdkView.java (especially onDrawFrame)

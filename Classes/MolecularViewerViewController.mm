@@ -57,6 +57,10 @@
 	settingOpened = FALSE;
 	nativeAdjustZoom(&objX, &objY, &objZ, &cameraZ, &slabNear, &slabFar, (symmetryMode == SYMOP_BIOMT));
 	rotationQ.x = 0; rotationQ.y = 0; rotationQ.z = 0; rotationQ.w = -1;
+
+	// Dirty. But we need to call this for updateMap.
+	[self drawFrame];
+	nativeUpdateMap(true);
 }
 
 - (void)awakeFromNib

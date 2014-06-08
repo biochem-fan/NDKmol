@@ -211,7 +211,8 @@ void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, floa
     sceneInfo.rotationGroupMatrix = multiplyMatrix(tCamera, r);
     sceneInfo.modelGroupMatrix = multiplyMatrix(sceneInfo.rotationGroupMatrix, centering);
 	
-	// TODO: Should be moved to appropriate place
+	// TODO: Should be moved to appropriate place.
+	// I hope this doesn't do harm in buggy Android devices because GL_FOG is disabled by default.
 #ifdef OPENGL_ES1
 	glFogf(GL_FOG_START, cameraNear * 0.3 + cameraFar * 0.7);
 	glFogf(GL_FOG_END, cameraFar);

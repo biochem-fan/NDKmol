@@ -1,6 +1,7 @@
 === LICENSE notice ===
 
 NDKmol itself is licensed under GNU Lesser General Public License as follows.
+If you want to use NDKmol under other conditions, please consult me.
 
 However, PDB files included as examples are under DIFFERENT conditions.
 Please consult 
@@ -11,7 +12,7 @@ http://www.rcsb.org/pdb/static.do?p=general_information/about_pdb/pdb_advisory.h
 
 NDKmol - Molecular Viewer on Android NDK
 
-     (C) Copyright 2011 - 2012, biochem_fan
+     (C) Copyright 2011 - 2014, biochem_fan
 
      This program is free software: you can redistribute it and/or modify
      it under the terms of the GNU Lesser General Public License as published by
