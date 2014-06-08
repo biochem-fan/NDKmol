@@ -2,16 +2,20 @@
 
 - !! In real device, changing representation sometimes leads to blank screen or crash
 - !! ES 2.0 doesn't work on Android Simulator due to shader link error. It works on Nexus 7 (2013).
-- !! Marching Squares doesn't work on Android real device!! (Mesh broken)
 
 - Clean up NdkView.java (especially onDrawFrame)
 - Build system for Android 1.6 (OpenGL ES 1.0)
   Now we have to edit GLES.hpp, Applicatin.mk, Android.mk, AndroidManifest.xml, NDKmolActivity.java
 
 - Support screen rotation in Android
+- Add UI for slab, contour level
+- Fix translation (pan) in Android
 
 - Do we need glDisable(GL_CULL_FACE); ?
 - Line does not use VBO yet
+
+- Centering by double tapping
+- Volume Renderer
 
 - Fix lighting (in ES2)
 - Fix lighting (in ES1; VBOSphere doesn't preserve lighting settings?)

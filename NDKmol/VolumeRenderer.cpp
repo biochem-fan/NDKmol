@@ -63,6 +63,7 @@ void MarchingSquares::prepareVBO() {
 	return;
 }
 
+
 void MarchingSquares::setMatrix() {
 #ifdef OPENGL_ES1
 	//	__android_log_print(ANDROID_LOG_DEBUG, "NdkView","MatRenderable rendering %d/%d", i, lim);
@@ -82,7 +83,6 @@ void MarchingSquares::render() {
 	glLineWidth(width);
 
 #ifdef OPENGL_ES1
-	glDisable(GL_LIGHTING);
 	glColor4f(objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 		
 	glVertexPointer(3,GL_FLOAT, 0, vertexBuffer);
