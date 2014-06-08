@@ -9,6 +9,6 @@ LOCAL_SRC_FILES := Atom.cpp NdkView.cpp Renderable.cpp CylinderGeometry.cpp \
 	 SDFReader.cpp SmoothTube.cpp GLES.cpp Matrix.cpp Debug.cpp MarchingSquares.cpp CCP4reader.cpp #PLYGeometry.cpp 
 
 # When building for Android 1.6 (android-4), we must use -lGLESv1_CM instead 
-LOCAL_LDLIBS := -llog -lGLESv1_CM
+LOCAL_LDLIBS := -llog -lGLESv1_CM -lz
 
 include $(BUILD_SHARED_LIBRARY)

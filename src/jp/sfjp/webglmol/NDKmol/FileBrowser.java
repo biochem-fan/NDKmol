@@ -83,7 +83,7 @@ public class FileBrowser extends Activity {
 					reader.close();
 				} else if (upperCased.endsWith("SDF") || upperCased.endsWith("MOL")) {
 					title = "a SDF/MOL file";
-				} else if (upperCased.endsWith("CCP4")) {
+				} else if (upperCased.endsWith("CCP4") || upperCased.endsWith("CCP4.GZ")) {
 					title = "an electron density file (CCP4/MRC format)";
 				} else {
 					continue;

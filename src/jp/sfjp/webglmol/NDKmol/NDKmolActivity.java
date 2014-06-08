@@ -237,7 +237,7 @@ public class NDKmolActivity extends Activity {
 		} else if (filePath.toUpperCase().endsWith("SDF") || filePath.toUpperCase().endsWith("MOL")) {
 			view.loadSDF(filePath);
 			currentFilename = filePath;
-		} else if (filePath.toUpperCase().endsWith("CCP4")) {
+		} else if (filePath.toUpperCase().endsWith("CCP4") || filePath.toUpperCase().endsWith("CCP4.GZ")) {
 			view.loadCCP4(filePath);
 		} else {
 			alert(getString(R.string.unknownFileType));
