@@ -1,5 +1,7 @@
 NDKmol - Molecular Viewer on Android NDK and iOS
 
+* This is "development" branch. Please use ES1 branch for a stable version *
+
 == About ==
 
 NDKmol is a molecular viewer for Android.
