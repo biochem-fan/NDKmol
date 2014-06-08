@@ -56,12 +56,12 @@
 #include <cstdio>
 #include "MarchingSquares.hpp"
 #include "GLES.hpp"
+#include "Debug.hpp"
 
 void MarchingSquares::prepareVBO() {
 // FIXME: meanwhile, we do not use VBO since mesh will be updated often
 	return;
 }
-
 
 void MarchingSquares::setMatrix() {
 #ifdef OPENGL_ES1
@@ -148,7 +148,7 @@ void MarchingSquares::build(int cc, int cr, int cs, int radius, float isol) {
 	if (xhi > nc - 2) xhi = nc - 2;
 	if (yhi > nr - 2) yhi = nr - 2;
 	if (zhi > ns - 2) zhi = ns - 2;
-	printf("Mesh Range: (%d, %d, %d)-(%d, %d, %d)\n", xlo, ylo, zlo, xhi, yhi, zhi);
+	DEBUG_PRINTF("Mesh Range: (%d, %d, %d)-(%d, %d, %d)\n", xlo, ylo, zlo, xhi, yhi, zhi);
 	
 	nPoints = 0;
 	
@@ -165,7 +165,7 @@ void MarchingSquares::build(int cc, int cr, int cs, int radius, float isol) {
             }
 		}
 	}
-	printf("Marching Squares: nPoints = %d\n", nPoints);
+	DEBUG_PRINTF("Marching Squares: nPoints = %d\n", nPoints);
 	// we don't need to fill 0s.
 }
 

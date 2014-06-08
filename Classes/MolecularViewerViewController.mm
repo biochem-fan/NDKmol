@@ -338,7 +338,7 @@ static void calcFps() {
     nativeSetScene(objX, objY, objZ, ax, ay, az, rotationQ.getAngle(),
                    cameraZ, slabNear, slabFar);
 	nativeGLRender();
-    
+	
     [(MolecularView *)self.view presentFramebuffer];
 }
 

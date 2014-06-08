@@ -61,6 +61,8 @@ typedef struct {
 	Mat16 projectionMatrix, rotationGroupMatrix, modelGroupMatrix;
 } SceneInfo;
 
+extern SceneInfo sceneInfo;
+
 extern void nativeGLResize (int width, int height);
 extern void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, float az, float rot,
                            float cameraZ, float slabNear, float slabFar);

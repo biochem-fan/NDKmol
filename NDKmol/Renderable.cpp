@@ -160,6 +160,7 @@ void Renderable::render() {
         glVertexAttrib4f(shaderVertexColor, objectColor.r, objectColor.g, objectColor.b, objectColor.a);
 #endif
 	}
+		
 	if (nFaces > 0) {
 #ifdef OPENGL_ES1
         glEnableClientState(GL_VERTEX_ARRAY);

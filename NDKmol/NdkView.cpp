@@ -210,6 +210,12 @@ void nativeSetScene(float objX, float objY, float objZ, float ax, float ay, floa
 	Mat16 centering = translationMatrix(objX, objY, objZ);
     sceneInfo.rotationGroupMatrix = multiplyMatrix(tCamera, r);
     sceneInfo.modelGroupMatrix = multiplyMatrix(sceneInfo.rotationGroupMatrix, centering);
+	
+	// TODO: Should be moved to appropriate place
+#ifdef OPENGL_ES1
+	glFogf(GL_FOG_START, cameraNear * 0.3 + cameraFar * 0.7);
+	glFogf(GL_FOG_END, cameraFar);
+#endif
 }
 
 // Left for compatibility reason
@@ -233,9 +239,6 @@ void nativeGLRender() {
 	
 #endif
     
-//  glFogf(GL_FOG_START, zNear * 0.3 + zFar * 0.7);
-//	glFogf(GL_FOG_END, zFar);
-    
 	currentModelViewMatrix = sceneInfo.modelGroupMatrix;
 #ifdef OPENGL_ES1
     glMatrixMode(GL_MODELVIEW);
@@ -245,6 +248,7 @@ void nativeGLRender() {
 	glUseProgram(shaderProgram);
     glUniformMatrix4fv(shaderProjectionMatrix, 1, GL_FALSE, sceneInfo.projectionMatrix.m);
 #endif
+	
 
     scene->render();
 }
@@ -465,11 +469,12 @@ void nativeUpdateMap(bool force) {
 void nativeGLInit() {
 	glClearColor(0, 0, 0, 1);
 	glEnable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//  glEnable(GL_BLEND);
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDepthFunc(GL_LEQUAL);
 	glDisable(GL_DITHER);
-    
+    glDisable(GL_TEXTURE_2D);
+	
 #ifndef OPENGL_ES1
     // Initialize Shader
 	shaderProgram = CreateShader(vertexShader, fragmentShader);
