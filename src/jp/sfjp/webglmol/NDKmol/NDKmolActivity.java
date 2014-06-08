@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -49,6 +50,7 @@ public class NDKmolActivity extends Activity {
 	private float currentCameraZ;
 	private boolean isDragging;
 	private Quaternion currentQ;
+	private long lastTouchTime;
 	private int touchMode = 2;
 	private int prevPointerCount = 0;
 	private boolean multiTouchEnabled = false;
@@ -637,7 +639,20 @@ public class NDKmolActivity extends Activity {
 
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_DOWN: 
-			//			Log.d("event", "down");
+			long currentTime = new Date().getTime();
+//			Log.d("event", "down delta = " + (currentTime - lastTouchTime));
+			if (currentTime - lastTouchTime < 200 && pointerCount == 1) { // double tap
+				// TODO: This behavior must be refined! Now it is not very intuitive.
+				Vector3 vec = new Vector3((float)x / view.width - 0.5f, (float)-y / view.height + 0.5f, 0.0f);
+				Vector3 translation = view.rotationQ.rotateVector(vec);
+				Log.d("event", "x = " + translation.x + "y = " + translation.y + "z = " + translation.z);
+				view.objX = -translation.x * 100;
+				view.objY = -translation.y *100;
+				view.objZ = -translation.z * 100;
+				view.nativeUpdateMap(false); // TODO: FIXME: This is not working! Should use SetScene.
+				glSV.requestRender(); 
+			}
+			lastTouchTime = currentTime;
 			isDragging = true;
 			view.isMoving = true;
 			startX = x;
@@ -659,13 +674,12 @@ public class NDKmolActivity extends Activity {
 			glSV.requestRender();
 			break; 
 		case MotionEvent.ACTION_MOVE:
-			//			Log.d("event", "move");
 			if (isDragging) {
 				if (pointerCount > 1) { 
-					if (startDistance > 150) {
+					if (startDistance > 150) { // FIXME: This is TOO small for high-density displays
 						if (distance > 100) {
 							view.cameraZ = currentCameraZ * startDistance / distance;
-							Log.d("NDKmol", "distance = " + distance + " start distance = " + startDistance + " CameraZ = " + view.cameraZ);
+							//Log.d("NDKmol", "distance = " + distance + " start distance = " + startDistance + " CameraZ = " + view.cameraZ);
 						}
 					} else {
 						float scaleFactor = 0.13f;
@@ -703,14 +717,14 @@ public class NDKmolActivity extends Activity {
 						view.rotationQ = Quaternion.multiply(dq, currentQ);
 					} else if (touchMode == 3) { // slab
 						float slabLimit = view.maxD / 1.85f;
-						if (view.symmetryMode != 0) slabLimit *= 2; // FIXME: improve!
-						//						view.slabFar = currentSlabFar + (startY - y) / (float)view.height * 50;
-						//						if (view.slabFar < 0.1f) view.slabFar = 0.1f; 
-						//						if (view.slabFar > slabLimit) view.slabFar = slabLimit;
-						//						view.slabNear = currentSlabNear + (startX - x) / (float)view.width * 50;
-						//						if (view.slabNear > -0.1f) view.slabNear = -0.1f;
-						//						if (view.slabNear < -slabLimit) view.slabNear = -slabLimit;
-						////						Log.d("ESmol", "maxD = " + view.maxD + " slabNear = " + view.slabNear + " slabFar = " + view.slabFar);
+						if (view.symmetryMode != 0) slabLimit *= 2; // FIXME: improve! not working well.
+						view.slabFar = currentSlabFar + (startY - y) / (float)view.height * 50;
+						if (view.slabFar < 0.1f) view.slabFar = 0.1f; 
+						if (view.slabFar > slabLimit) view.slabFar = slabLimit;
+						view.slabNear = currentSlabNear + (startX - x) / (float)view.width * 50;
+						if (view.slabNear > -0.1f) view.slabNear = -0.1f;
+						if (view.slabNear < -slabLimit) view.slabNear = -slabLimit;
+						Log.d("ESmol", "maxD = " + view.maxD + " slabNear = " + view.slabNear + " slabFar = " + view.slabFar);
 						float slabMid = (currentSlabFar + currentSlabNear) / 2;
 						float slabWidth = slabMid - currentSlabNear;
 						slabWidth += (startY - y) / (float)view.height * 50;

@@ -30,6 +30,7 @@ public:
 	CCP4file(std::string filename);
 	~CCP4file();
 	Mat16 getMatrix(bool scale);
+	bool parseHeader(unsigned char* header);
 	
 	float* map = NULL;
 	// These arrays are 1-indexed!!

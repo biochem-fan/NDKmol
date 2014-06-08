@@ -134,6 +134,8 @@ Mat16 MarchingSquares::getMatrix() {
 }
 
 void MarchingSquares::build(int cc, int cr, int cs, int radius, float isol) {
+	if (!field) return;
+	
 	MarchingSquares::isol = isol;
 	int q, x, y, z, y_offset, z_offset;
 	
@@ -149,7 +151,7 @@ void MarchingSquares::build(int cc, int cr, int cs, int radius, float isol) {
 	if (xhi > nc - 2) xhi = nc - 2;
 	if (yhi > nr - 2) yhi = nr - 2;
 	if (zhi > ns - 2) zhi = ns - 2;
-	DEBUG_PRINTF("Mesh Range: (%d, %d, %d)-(%d, %d, %d)\n", xlo, ylo, zlo, xhi, yhi, zhi);
+//	DEBUG_PRINTF("Mesh Range: (%d, %d, %d)-(%d, %d, %d)\n", xlo, ylo, zlo, xhi, yhi, zhi);
 	
 	nPoints = 0;
 	
@@ -166,7 +168,7 @@ void MarchingSquares::build(int cc, int cr, int cs, int radius, float isol) {
             }
 		}
 	}
-	DEBUG_PRINTF("Marching Squares: nPoints = %d\n", nPoints);
+//	DEBUG_PRINTF("Marching Squares: nPoints = %d\n", nPoints);
 	// we don't need to fill 0s.
 }
 

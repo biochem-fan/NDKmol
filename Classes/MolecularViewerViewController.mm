@@ -125,7 +125,7 @@
 	// Load initial model
 	[self loadMolecule: @"2OUP.pdb"];
 	// Test loading MTZ file
-	[self loadMTZ: @"2oup.ccp4"];
+	[self loadMTZ: @"2oup.ccp4.gz"];
 }
 
 // TODO: Add slab UI

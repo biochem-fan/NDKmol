@@ -27,7 +27,7 @@
 #endif
 
 // debug
-#define OPENGL_ES1
+//#define OPENGL_ES1
 
 #ifdef OPENGL_ES1
 

@@ -21,16 +21,40 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <zlib.h>
 
 CCP4file::CCP4file(std::string filename) {
 	FILE *ccp4in = std::fopen(filename.c_str(), "rb");
 	if (!ccp4in) return;
 	
-	char buf[300];
+	unsigned char buf[300];
 	std::fread(buf, 4, 56, ccp4in);
+	if (parseHeader(buf)) {
+		std:fseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
+		map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
+		if (map) std::fread(map, sizeof(float), NCRS[1] * NCRS[2] * NCRS[3], ccp4in);
+		fclose(ccp4in);
+		return;
+	} else if (buf[0] == 0x1f && buf[1] == 0x8b) { // gzipped map
+		fclose(ccp4in);
+		
+		gzFile ccp4gz = gzopen(filename.c_str(), "rb");
+		if (!ccp4gz) return;
+		gzread(ccp4gz, buf, 56 * 4);
+		if (parseHeader(buf)) {
+			gzseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
+			map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
+			if (map) gzread(ccp4gz, map, NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
+		}
+		gzclose(ccp4gz);
+	}
+}
+
+bool CCP4file::parseHeader(unsigned char* buf) {
+	if (buf[52 * 4] != 'M' || buf[52 * 4 + 1] != 'A' || buf[52 * 4 + 2] != 'P') return false;
+	
 	int *header_int = (int*)buf;
 	float *header_float = (float*)buf;
-	
 	NCRS[1] = header_int[0];
 	NCRS[2] = header_int[1];
 	NCRS[3] = header_int[2];
@@ -61,15 +85,7 @@ CCP4file::CCP4file(std::string filename) {
 	printf("CCP4file: CELL %f %f %f %f %f %f\n", a, b, c, alpha, beta, gamma);
 	printf("CCP4file: MIN %f MEAN %f MAX %f RMS %f\n", AMIN, AMEAN, AMAX, ARMS);
 	
-	std:fseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
-	map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
-	if (!map) {
-		fclose(ccp4in);
-		return;
-	}
-	std::fread(map, sizeof(float), NCRS[1] * NCRS[2] * NCRS[3], ccp4in);
-	
-	fclose(ccp4in);
+	return true;
 }
 
 Mat16 CCP4file::getMatrix(bool scale) {
