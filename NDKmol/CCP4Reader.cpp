@@ -42,7 +42,7 @@ CCP4file::CCP4file(std::string filename) {
 		if (!ccp4gz) return;
 		gzread(ccp4gz, buf, 56 * 4);
 		if (parseHeader(buf)) {
-			gzseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
+			gzseek(ccp4gz, 256 * 4 + NSYMBT, SEEK_SET);
 			map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
 			if (map) gzread(ccp4gz, map, NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
 		}
