@@ -25,7 +25,7 @@
 #import "SettingViewController.h"
 
 #include "GLES.hpp"
-#include "CCP4reader.hpp"
+#include "CCP4Reader.hpp"
 
 @interface MolecularViewerViewController ()
 @property (nonatomic, retain) EAGLContext *context;

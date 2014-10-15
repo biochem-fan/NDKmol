@@ -40,7 +40,7 @@
 #include "VBOCylinder.hpp"
 #include "ChemDatabase.hpp"
 #include "Protein.hpp"
-#include "CCP4reader.hpp"
+#include "CCP4Reader.hpp"
 #include "MarchingSquares.hpp"
 #include "View.hpp"
 #include "Debug.hpp"

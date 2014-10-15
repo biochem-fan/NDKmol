@@ -17,7 +17,7 @@
      You should have received a copy of the GNU Lesser General Public License
      along with this program.  If not, see <http://www.gnu.org/licenses/>. */
 
-#include "CCP4reader.hpp"
+#include "CCP4Reader.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
