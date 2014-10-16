@@ -22,7 +22,7 @@
 
 #include <string>
 #include "Renderable.hpp"
-#include "CCP4reader.hpp"
+#include "CCP4Reader.hpp"
 
 // FIXME: should inherit Line?
 class MarchingSquares: public Renderable {
