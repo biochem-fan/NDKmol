@@ -19,6 +19,7 @@
 
 #include "SphereGeometry.hpp"
 #include <cmath>
+#include <cstddef>
 
 float *SphereGeometry::vertexBuffer = NULL;
 float *SphereGeometry::vertexNormalBuffer = NULL;

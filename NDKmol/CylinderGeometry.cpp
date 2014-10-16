@@ -19,6 +19,7 @@
 
 #include "CylinderGeometry.hpp"
 #include <cmath>
+#include <cstddef>
 
 float *CylinderGeometry::vertexBuffer = NULL;
 float *CylinderGeometry::vertexNormalBuffer = NULL;
