@@ -760,7 +760,8 @@ void drawAtomsAsStar(Renderable &scene, std::vector<int> &atomlist, float delta)
 		int offset = 0;
 		float x = atom->x, y = atom->y, z = atom->z;
 		for (int j = 0; j < 6; j++) {
-			points.push_back(Vector3(x + pointsBase[offset++], y + pointsBase[offset++], z + pointsBase[offset++]));
+			points.push_back(Vector3(x + pointsBase[offset], y + pointsBase[offset + 1], z + pointsBase[offset + 2]));
+			offset += 3;
 			colors.push_back(atom->color);
 		}
 	}

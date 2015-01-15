@@ -30,7 +30,7 @@ CCP4file::CCP4file(std::string filename) {
 	unsigned char buf[300];
 	std::fread(buf, 4, 56, ccp4in);
 	if (parseHeader(buf)) {
-		std:fseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
+		std::fseek(ccp4in, 256 * 4 + NSYMBT, SEEK_SET);
 		map = (float*)malloc(NCRS[1] * NCRS[2] * NCRS[3] * sizeof(float));
 		if (map) std::fread(map, sizeof(float), NCRS[1] * NCRS[2] * NCRS[3], ccp4in);
 		fclose(ccp4in);

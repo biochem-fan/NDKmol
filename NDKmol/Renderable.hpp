@@ -46,7 +46,7 @@ public:
     virtual void prepareVBO();
     virtual void deleteVBO();
     virtual void render();
-	~Renderable();
+	virtual ~Renderable();
 };
 
 #endif
