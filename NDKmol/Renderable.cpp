@@ -55,19 +55,19 @@ Renderable::~Renderable() {
     deleteVBO();
     
 	if (vertexBuffer) {
-		delete vertexBuffer;
+		delete [] vertexBuffer;
 		vertexBuffer = NULL;
 	}
 	if (vertexNormalBuffer) {
-		delete vertexNormalBuffer;
+		delete [] vertexNormalBuffer;
 		vertexNormalBuffer = NULL;
 	}
 	if (faceBuffer) {
-		delete faceBuffer;
+		delete [] faceBuffer;
 		faceBuffer = NULL;
 	}
 	if (colorBuffer) {
-		delete colorBuffer;
+		delete [] colorBuffer;
 		colorBuffer = NULL;
 	}
 	for (int i = 0, lim = children.size(); i < lim; i++) {
