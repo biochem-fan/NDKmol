@@ -498,7 +498,7 @@ void nativeGLInit() {
 	glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
 	glEnable(GL_POINT_SMOOTH);
 	glEnable(GL_LINE_SMOOTH); // FIXME: Check if this is working.
-	glLightModelx(GL_LIGHT_MODEL_TWO_SIDE, 1); // double sided
+	glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1); // double sided
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
