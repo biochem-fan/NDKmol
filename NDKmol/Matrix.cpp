@@ -220,7 +220,7 @@ Mat9 transposedInverseMatrix9(Mat16 &m) {
     double det =  a0 * ret.m[0] + a4 * ret.m[1] + a8 * ret.m[2];
     if (det != 0) {
         double det_inv = 1 / det;
-        for (int i = 0; i < 12; i++) ret.m[i] *= det_inv;
+        for (int i = 0; i < 9; i++) ret.m[i] *= det_inv;
     } else {
         printf("Error while inverting matrix.\n");
         //ret = identityMatrix(); // TODO: report this error to the caller
