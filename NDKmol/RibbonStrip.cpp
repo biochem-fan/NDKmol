@@ -176,8 +176,8 @@ void RibbonStrip::initMesh(float *points1, float *points2, std::vector<Color> &c
 	
 	colorBuffer = colorVectorToFloatArray(colors, div * 8);
 	
-	delete points1;
-	delete points2;
+	delete [] points1;
+	delete [] points2;
 }
 
 
@@ -250,6 +250,6 @@ void RibbonStrip::initMesh(float *points1, float *points2, std::vector<Color> &c
 	
 	colorBuffer = colorVectorToFloatArray(colors, div * 2);
 	
-	delete points1;
-	delete points2;
+	delete [] points1;
+	delete [] points2;
 }

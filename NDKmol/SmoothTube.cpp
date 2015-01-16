@@ -110,7 +110,7 @@ SmoothTube::SmoothTube(std::vector<Vector3> &_points, std::vector<Color> &colors
 		voffset += circleDiv;
 	}
 
-	free(points);
+	delete [] points;
 
 	vertexBuffer = vertices;
 	colorBuffer = colorVectorToFloatArray(colors, axisDiv * circleDiv);
