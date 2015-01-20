@@ -23,7 +23,7 @@
 #include <cmath>
 #include <zlib.h>
 
-CCP4file::CCP4file(std::string filename) {
+CCP4file::CCP4file(std::string filename) : map(NULL) {
 	FILE *ccp4in = std::fopen(filename.c_str(), "rb");
 	if (!ccp4in) return;
 	

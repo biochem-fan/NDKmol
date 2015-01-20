@@ -22,6 +22,8 @@
 #include "math.h"
 
 Renderable::Renderable() {
+	faceVBO = -1; vertexVBO = -1, vertexNormalVBO = -1; colorVBO = -1;
+	nVertices = 0;
 	scalex = 1; scaley = 1; scalez = 1;
 	posx = 0; posy = 0; posz = 0;
 	rot = 0; rotx = 1; roty = 1; rotz = 0;

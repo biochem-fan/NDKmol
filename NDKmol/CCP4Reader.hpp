@@ -32,7 +32,7 @@ public:
 	Mat16 getMatrix(bool scale);
 	bool parseHeader(unsigned char* header);
 	
-	float* map = NULL;
+	float* map;
 	// These arrays are 1-indexed!!
 	int NCRS[4], NSTART[4], NXYZ[4], MAPCRS[4], ISPG, NSYMBT;
 	float a, b, c, alpha, beta, gamma, AMIN, AMAX, AMEAN, ARMS;
