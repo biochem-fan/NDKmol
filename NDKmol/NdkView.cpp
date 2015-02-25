@@ -66,6 +66,8 @@ float cylinderRadius = 0.2f;
 float lineWidth = 2.0f;
 float curveWidth = 2.0f;
 float thickness = 0.6;
+float mapRadius = 10.0f;
+float mapIsoLevel = 0.5f;
 
 float* getExtent(std::vector<int> &atomlist);
 std::vector<int> getAll();
@@ -464,7 +466,7 @@ void nativeUpdateMap(bool force) {
 	Vector3 center(-sceneInfo.objX, -sceneInfo.objY, -sceneInfo.objZ);
 	center.applyMat16(invMatrix);
 	printf("%f %f %f cz = %f\n", center.x, center.y, center.z, sceneInfo.cameraZ);
-	ms->build((int)center.x, (int)center.y, (int)center.z, 10, 0.5);
+	ms->build((int)center.x, (int)center.y, (int)center.z, mapRadius, mapIsoLevel);
 }
 
 void nativeGLInit() {
