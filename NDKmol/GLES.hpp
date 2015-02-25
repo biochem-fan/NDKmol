@@ -37,6 +37,11 @@
 #include <OpenGLES/ES1/gl.h>
 #elif __APPLE__
 #include <OpenGL/gl.h>
+#elif defined(_WIN32)
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glext.h>
 #else
 #define GL_GLEXT_PROTOTYPES
 #define EGL_EGLEXT_PROTOTYPES
@@ -69,6 +74,15 @@ extern unsigned int shaderProgram, shaderVertexPosition, shaderVertexNormal;
 extern unsigned int shaderModelViewMatrix, shaderProjectionMatrix, shaderNormalMatrix;
 extern unsigned int shaderVertexColor;
 extern Mat16 currentModelViewMatrix;
+
+#ifdef _WIN32
+extern PFNGLGENBUFFERSPROC          glGenBuffers;
+extern PFNGLBINDBUFFERPROC          glBindBuffer;
+extern PFNGLBUFFERDATAPROC          glBufferData;
+extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+extern PFNGLDELETEBUFFERSPROC       glDeleteBuffers;
+void PrepareGlFunctions();
+#endif
 
 #ifndef OPENGL_ES1
 extern const GLchar *vertexShader, *fragmentShader;
