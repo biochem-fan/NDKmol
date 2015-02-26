@@ -126,3 +126,23 @@ GLuint CreateShader(const GLchar *vs, const GLchar *fs) {
     return prog;
 }
 #endif
+
+#ifdef _WIN32
+PFNGLGENBUFFERSPROC          glGenBuffers = NULL;
+PFNGLBINDBUFFERPROC          glBindBuffer = NULL;
+PFNGLBUFFERDATAPROC          glBufferData = NULL;
+PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer = NULL;
+PFNGLDELETEBUFFERSPROC       glDeleteBuffers = NULL;
+void PrepareGlFunctions() {
+    glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
+    glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
+    glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
+    glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)wglGetProcAddress("glVertexAttribPointer");
+    glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)wglGetProcAddress("glDeleteBuffers");
+    if (!glGenBuffers || !glBindBuffer || !glBufferData ||
+            !glVertexAttribPointer || !glDeleteBuffers) {
+        MessageBox(NULL, "Cannot load OpenGL 1.4 functions.", "Sorry", MB_OK);
+        exit(1);
+    }
+}
+#endif
