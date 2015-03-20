@@ -63,7 +63,9 @@ public class PubChemSearcher extends Activity {
 	private EditText keyword;
 	private String pubchemSearchURI = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pccompound&retmax=#MAXRESULT#&term=#KEYWORD#";
 	private String pdbchemDetailURI = "http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=pccompound&id=#IDs#";
-	private String pubchemDownloadURI = "http://pubchem.ncbi.nlm.nih.gov/summary/summary.cgi?disopt=3DSaveSDF&cid=";
+	private String pubchemDownloadURI = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/#ID#/record/SDF/?record_type=3d";
+    // when changed, edit NDKmolActivity.readURI accordingly!
+
 	private List<Map<String, String>> dataList;
 	private int MAXRESULT = 30, MAXSYNONYMS = 5;
 	private PubChemSearcher self;
@@ -218,7 +220,7 @@ public class PubChemSearcher extends Activity {
 				.setPositiveButton("Download", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						Intent i = new Intent();
-						i.setData(Uri.parse(pubchemDownloadURI + PDBid));
+						i.setData(Uri.parse(pubchemDownloadURI.replaceFirst("#ID#", PDBid)));
 						setResult(RESULT_OK, i);
 						getIntent().setData(i.getData());
 						finish();

@@ -201,11 +201,12 @@ public class NDKmolActivity extends Activity {
 			openFile(uri.substring(7));
 		} else if (scheme.equals("http://")) {
 			String fileName = uri.substring(uri.lastIndexOf('/') + 1);
-			if (uri.contains("SaveSDF")) {
-				int index = uri.indexOf("cid=");
+			if (uri.contains("record_type=3d")) {
+				int start = "http://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/".length();
+                int index = uri.indexOf("/record/SDF/?record_type=3d");
 				if (index < 0) return;
-				index += 4;
-				fileName = uri.substring(index) + ".sdf";
+
+				fileName = uri.substring(start, index) + ".sdf";
 			}
 			new Downloader(this, uri, getDataDir() + "/" + fileName);
 		}

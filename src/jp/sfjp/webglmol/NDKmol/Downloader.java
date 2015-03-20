@@ -85,11 +85,13 @@ public class Downloader {
 
 		@Override
 		protected Integer doInBackground(String... dummy) {
+            int ret = SUCCESS;
+
 			try {			
 				URL url = new URL(uri);
-				HttpURLConnection httpConn;
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(parent);
-				
+				HttpURLConnection httpConn;
+
 				if (prefs.getBoolean(parent.getString(R.string.useProxy), false)) {
 					String proxyAddress = prefs.getString(parent.getString(R.string.proxyHost), "");
 					int proxyPort = Integer.parseInt(prefs.getString(parent.getString(R.string.proxyPort), "8080"));
@@ -105,45 +107,53 @@ public class Downloader {
 				httpConn.setInstanceFollowRedirects(true);
 				httpConn.setRequestMethod("GET");
 				httpConn.connect();
-				if (httpConn.getResponseCode() != HttpURLConnection.HTTP_OK) {
-					throw new HttpException("File not found.");
-				}
-				
-//				max = httpConn.getContentLength();
-				// PDB web server doesn't send Content-Length header.
-				// we cannot setProgressStyle after the dialog is showed.
-//				Log.d("Downloader", "size :" + max);
-//				if (max > 0) {
-//					progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-//					progress.setMax(max);				
-//				}
-				
-				DataInputStream inp = new DataInputStream(httpConn.getInputStream());
-				FileOutputStream out = new FileOutputStream(dest);
-				byte[] buffer = new byte[10000];
-				int read;
-				boolean first = true;
-				while ((read = inp.read(buffer)) > 0) {
-					if (isKilled) return CANCELED;
-					if (first) {
-						first = false;
-						String str = new String(buffer);
-						if (str.indexOf("3D info is not available") != -1) return NO3DSDF;
-					}
-//					if (max > 0) progress.incrementProgressBy(read);
-					out.write(buffer, 0, read);
-				}
-				inp.close();
-				out.close();
-				httpConn.disconnect();
+
+                DataInputStream inp;
+                FileOutputStream out;
+                byte[] buffer = new byte[10000];
+
+				if (httpConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                    //				max = httpConn.getContentLength();
+                    // PDB web server doesn't send Content-Length header.
+                    // we cannot setProgressStyle after the dialog is showed.
+                    //				Log.d("Downloader", "size :" + max);
+                    //				if (max > 0) {
+                    //					progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    //					progress.setMax(max);
+                    //				}
+
+                    inp = new DataInputStream(httpConn.getInputStream());
+                    out = new FileOutputStream(dest);
+                    int read;
+
+                    boolean first = true;
+                    while ((read = inp.read(buffer)) > 0) {
+                        if (isKilled) return CANCELED;
+                        //					if (max > 0) progress.incrementProgressBy(read);
+                        out.write(buffer, 0, read);
+                    }
+
+                    inp.close();
+                    out.close();
+                    httpConn.disconnect();
+                } else {
+                    inp = new DataInputStream(httpConn.getErrorStream());
+                    out = new FileOutputStream(dest);
+                    inp.read(buffer);
+
+                    String str = new String(buffer);
+                    if (str.indexOf("PUGREST.NotFound") != -1) ret = NO3DSDF;
+                    else throw new HttpException("File not found.");
+                }
 
 			} catch (Exception e) {
 				Log.d("Downloader", "failed " + e.getMessage());
 				Log.d("Downloader", "failed " + e.toString());
 				Log.d("Downloader", "failed " + e.getStackTrace()[0].getClassName() + e.getStackTrace()[0].getLineNumber());
-				return ERROR;
+				ret = ERROR;
 			}
-			return SUCCESS;
+			return ret;
 		}
 
 		@Override
