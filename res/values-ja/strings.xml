@@ -94,8 +94,8 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="authors">著者:</string>
     <string name="releaseDate">公開日:</string>
     <string name="tooManyHits">検索結果が多すぎます。一部だけを表示しています</string>
-    <string name="downloading">ダウンロード中...</string>
-    <string name="searching">検索中...</string>
+    <string name="downloading">ダウンロード中&#8230;</string>
+    <string name="searching">検索中&#8230;</string>
     <string name="pleaseWait">お待ちください</string>
     <string name="TouchMode">操作</string>
     <string name="Slab">スラブ</string>

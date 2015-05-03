@@ -55,7 +55,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="tooBigPDB">This file is too big. Please consider using NDKmol which is available at Android Market or my project website.</string>
     <string name="tooBigSDF">This file is too big to open.</string>
     <string name="wrongPDBID">PDB id is wrong.</string>
-    <string name="unknownFIleType">Unknown file type. Only .pdb / .sdf / .mol files are supported.</string>
+    <string name="unknownFileType">Unknown file type. Only .pdb / .sdf / .mol files are supported.</string>
     <string name="Zoom">Zoom</string>
     <string name="Rotate">Rotate</string>
     <string name="Move">Move</string>
@@ -96,14 +96,14 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="authors">Authors:</string>
     <string name="releaseDate">Released on:</string>
     <string name="tooManyHits">Found too many entries. Displaying only part of them.</string>
-    <string name="downloading">Downloading...</string>
-    <string name="searching">Searching...</string>
+    <string name="downloading">Downloading&#8230;</string>
+    <string name="searching">Searching&#8230;</string>
     <string name="pleaseWait">Please wait</string>
     <string name="TouchMode">Touch Mode</string>
     <string name="Slab">Slab</string>
     <string name="resetView">Reset View</string>
     <string name="ShowHeader">View header</string>
-    <string name="downloadError">Error occured while downloading the structure.</string>
+    <string name="downloadError">Error occurred while downloading the structure.</string>
     <string name="no3DSDF">PubChem does not provide a three dimensional structure of this compound(Only two dimensional structure is available). Download was canceled.</string>
     <string name="enableFog">enableFog</string>
     <string name="enableFogTitle">Enable Fog</string>
