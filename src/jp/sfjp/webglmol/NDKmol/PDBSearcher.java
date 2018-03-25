@@ -218,7 +218,7 @@ public class PDBSearcher extends Activity {
 				.setPositiveButton(getString(R.string.download), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						Intent i = new Intent();
-						i.setData(Uri.parse("http://www.pdb.org/pdb/files/" + PDBid.toUpperCase() + ".pdb"));
+						i.setData(Uri.parse("http://files.rcsb.org/view/" + PDBid.toUpperCase() + ".pdb"));
 						setResult(RESULT_OK, i);
 						getIntent().setData(i.getData());
 						finish();

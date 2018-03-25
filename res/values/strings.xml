@@ -36,7 +36,7 @@ The structure used as an example is adapted from PDB, ID 2POR:\n
 \n
 NDKmol - Molecular Viewer for Android\n
 \n
-     (C) Copyright 2011, biochem_fan\n
+     (C) Copyright 2011-2015, biochem_fan\n
 \n
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -117,4 +117,5 @@ along with this program.  If not, see http://www.gnu.org/licenses/\n
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
     <string name="strucureDetails">Structure Details</string>
+    <string name="cactusExplanation">You can search 3D structure using NCI/CADD CACTUS chemical identifer resolver.\nFor example, try searching \'xenon hexafluoride\'.</string>
 </resources>

@@ -56,6 +56,10 @@ public class SearcherTab extends TabActivity {
 		spec = tabHost.newTabSpec("Tab2").setIndicator("PubChem").setContent(intent);
 		tabHost.addTab(spec);
 
+		intent = new Intent().setClass(this, CACTUSSearcher.class);
+		spec = tabHost.newTabSpec("Tab2").setIndicator("NCI CACTUS").setContent(intent);
+		tabHost.addTab(spec);
+		
 		tabHost.setCurrentTab(0);
 	}
 }
