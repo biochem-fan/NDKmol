@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NDKmol</string>
+    <string name="preferencesTitle">Preferências</string>
+    <string name="proxyHost">httpProxyHost</string>
+    <string name="proxyHostTitle">Host do Proxy HTTP</string>
+    <string name="proxyHostSummary"></string>
+    <string name="proxyPortTitle">Porta do Proxy HTTP</string>
+    <string name="proxyPort">httpProxyPort</string>
+    <string name="proxyPortSummary"></string>
+    <string name="useProxy">useHTTPProxy</string>
+    <string name="useProxySummary">selecione para usar proxy HTTP</string>
+    <string name="useProxyTitle">Usar Proxy HTTP</string>
+    <string name="about">
+NDKmol - Visualizador Molecular para Android\n
+Por favor visite http://webglmol.sfjp.jp/ para detalhes e códigos fonte. Você também
+pode encontrar a versão WebGL lá.\n
+\n
+\n
+\n
+*** NOTAS DE LICENÇA ***
+\n
+O próprio NDKmol é licenciado sob a GNU Lesser General Public License como segue.\n
+\n
+Entretanto, arquivos PDB incluídos como exemplos estão sob condições DIFERENTE.\n
+Por favor consulte http://www.rcsb.org/pdb/static.do?p=general_information/about_pdb/pdb_advisory.html\n
+\n
+-------------\n
+\n
+A estrutura utilizada como um exemplo foi adaptada do PDB, ID 2POR:\n
+ "Structure of porin refined at 1.8 A resolution"\n
+   Weiss, M.S.,  Schulz, G.E., J.Mol.Biol. 227: 493-509 (1992)
+\n
+-------------\n
+\n
+NDKmol - Visualizador Molecular para Android\n
+\n
+     (C) Copyright 2011, biochem_fan\n
+\n
+Este programa é software livre: você pode redistribuí-lo e/ou modificá-lo
+sob os mesmo termos da GNU Lesser General Public License como publicado pela
+Free Software Foundation, ou pela versão 3 da Licença, ou
+(pela sua escolha) qualquer versão mais recente.\n
+\n
+Este programa é distribuído na esperança de que ele seja útil,
+mas SEM NENHUMA GARANTIA; até mesmo sem a garantia implícita de
+COMERCIALIZAÇÃO ou ADEQUAÇÃO A UM PROPÓSITO ESPECÍFICO. Veja a
+GNU Lesser General Public License para mais detalhes.\n
+\n
+Você deve ter recebido uma cópia da GNU Lesser General Public License
+junto com este programa.  Caso negativo, veja http://www.gnu.org/licenses/\n
+\n
+    </string>
+    <string name="tooBigPDB">Este arquivo é muito grande. Por favor considere utilizar o NDKmol que está disponível na Play Store ou no website do meu projeto.</string>
+    <string name="tooBigSDF">Este arquivo é muito grande para abrir.</string>
+    <string name="wrongPDBID">O id do PDB está errado.</string>
+    <string name="unknownFIleType">Tipo desconhecido de arquivo. Apenas arquivos .pdb / .sdf / .mol são suportados.</string>
+    <string name="Zoom">Zoom</string>
+    <string name="Rotate">Rotacionar</string>
+    <string name="Move">Mover</string>
+    <string name="AsMainchainTrace">Como traçado da cadeia principal</string>
+    <string name="AsRibbon">Como fita fina (mais rápido)</string>
+    <string name="AsStrand">Como vertente</string>
+    <string name="ShowSidechains">Mostrar cadeias laterais</string>
+    <string name="BaseAsPolygon">Escada de ácido nucleico</string>
+    <string name="BaseAsLine">Linha de ácido nucleico</string>
+    <string name="AsSphere">Como esfera</string>
+    <string name="AsStick">Como graveto</string>
+    <string name="AsLine">Como linha</string>
+    <string name="ShowSolvents">Mostrar solventes</string>
+    <string name="ByChain">Por cadeia</string>
+    <string name="ByStructure">Por estrutura</string>
+    <string name="AsRainbow">Como arco íris</string>
+    <string name="PolarNonpolar">Polar/Não polar</string>
+    <string name="ByBFactor">Pelo fator B</string>
+    <string name="ShowPacking">Mostrar empacotamento</string>
+    <string name="ShowUnitCell">Mostrar célula unitária</string>
+    <string name="ShowMonomer">Mostrar monômero</string>
+    <string name="ShowBiologicalUnit">Mostrar unidade biológica</string>
+    <string name="Polymer">Polímero</string>
+    <string name="AsBFactorTube">Como tubo de fator B</string>
+    <string name="Ligands">Ligantes</string>
+    <string name="Color">Cor</string>
+    <string name="Crystal">Critais</string>
+    <string name="Open">Abrir</string>
+    <string name="DownloadPDB">Procurar e Baixar</string>
+    <string name="Preferences">Preferências</string>
+    <string name="About">Sobre</string>
+    <string name="goToWebSite">Visitar Website</string>
+    <string name="searchButton">Pesquisar</string>
+    <string name="PDBID">ID:</string>
+    <string name="structureTitle">Título:</string>
+    <string name="blank"></string>
+    <string name="resolution">Resolução:</string>
+    <string name="authors">Autores:</string>
+    <string name="releaseDate">Lançado em:</string>
+    <string name="tooManyHits">Muitos resultados encontrados. Exibindo apenas uma parte deles.</string>
+    <string name="downloading">Baixando...</string>
+    <string name="searching">Pesquisando...</string>
+    <string name="pleaseWait">Por favor espere</string>
+    <string name="TouchMode">Modo de Toque</string>
+    <string name="Slab">Slab</string>
+    <string name="resetView">Restaurar Visualização</string>
+    <string name="ShowHeader">Visualizar cabeçalho</string>
+    <string name="downloadError">Erro ocorrido enquanto estava baixando a estrutura.</string>
+    <string name="no3DSDF">PubChem não fornece uma estrutura tridimensional deste composto(Apenas estruturas de duas dimensões estão disponíveis). O download foi cancelado.</string>
+    <string name="enableFog">enableFog</string>
+    <string name="enableFogTitle">Habilitar Fumaça</string>
+    <string name="enableFogSummary">Em alguns dispositivos, essa opção pode causar um problema de coloração. Se a molécula se tornar cinza, por favor desmarque essa opção.</string>
+    <string name="AsBonds">Como títulos (Tudo)</string>
+    <string name="None">Nenhum</string>
+    <string name="AsThickRibbon">Como fita larga</string>
+    <string name="SymopHetatms">Aplicar a HETATMs</string>
+    <string name="doNotSmoothen">Sem folhas lisas</string>
+    <string name="download">Baixar</string>
+    <string name="delete">Excluir</string>
+    <string name="cancel">Cancelar</string>
+    <string name="strucureDetails">Detalhes da Estrutura</string>
+</resources>
